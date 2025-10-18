@@ -1,22 +1,23 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: O Generics pode ser any caso não tenha tipo definido */
 export type ResponseDataType = "json" | "blob" | "arraybuffer" | "text";
 
-export interface IHttpParams {
-  url: string;
-  body?: any;
-  headers?: Record<string, any>;
-  signal?: AbortSignal;
-  ResponseDataType?: ResponseDataType;
+export interface HttpParams<T = any> {
+	url: string;
+	body?: T;
+	headers?: Record<string, any>;
+	signal?: AbortSignal;
+	responseDataType?: ResponseDataType;
 }
 
-export interface IHttpResponse<T = any> {
-  data: T;
-  status: number;
-  headers: Record<string, any>;
+export interface HttpResponse<T = any> {
+	data: T;
+	status: number;
+	headers: Record<string, any>;
 }
 
-export interface IHttpClient {
-  get<T = any>(params: IHttpParams): Promise<IHttpResponse<T>>;
-  post<T = any>(params: IHttpParams): Promise<IHttpResponse<T>>;
-  put<T = any>(params: IHttpParams): Promise<IHttpResponse<T>>;
-  delete<T = any>(params: IHttpParams): Promise<IHttpResponse<T>>;
+export interface HttpClient {
+	get<T = any>(params: HttpParams): Promise<HttpResponse<T>>;
+	post<T = any>(params: HttpParams): Promise<HttpResponse<T>>;
+	put<T = any>(params: HttpParams): Promise<HttpResponse<T>>;
+	delete<T = any>(params: HttpParams): Promise<HttpResponse<T>>;
 }

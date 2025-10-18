@@ -1,6 +1,5 @@
-import { ListDetailView } from "@presentation/screens/Lists/Detail";
-import React from "react";
+import { ListDetailView } from "@/presentation/screens/Lists/Detail";
 
 export default function List() {
-  return <ListDetailView />;
+	return <ListDetailView />;
 }

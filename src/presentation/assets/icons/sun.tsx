@@ -1,13 +1,13 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import type { Icon } from "@presentation/types";
+import type { Icon } from "@/presentation/types";
 
 export const Sun = ({ size = 24, color = "black", ...rest }: Icon) => {
-  return (
-    <MaterialCommunityIcons
-      name="brightness-5"
-      size={size}
-      color={color}
-      {...rest}
-    />
-  );
+	return (
+		<MaterialCommunityIcons
+			name="brightness-5"
+			size={size}
+			color={color}
+			{...rest}
+		/>
+	);
 };

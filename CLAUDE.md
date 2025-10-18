@@ -12,10 +12,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Framework**: Expo SDK 54 (~54.0.9) with React Native 0.81.4
 - **React Version**: 19.1.0 (critical - do not downgrade)
 - **TypeScript**: 5.9.2
-- **Routing**: Expo Router ~6.0.7 (file-based routing)
+- **Routing**: Expo Router ~6.0.10 (file-based routing with typed routes)
 - **Firebase**: Multiple Firebase services integrated (@react-native-firebase/*)
-- **Monitoring**: Sentry for error tracking
-- **Code Quality**: ESLint, Prettier, Husky for pre-commit hooks
+- **Monitoring**: Sentry 7.1.0 for error tracking
+- **Code Quality**: Biome 2.2.6 (formatter + linter), Lefhook for git hooks
+- **Node Version**: >= 20.19.4 (minimum required)
 
 ## Essential Commands
 
@@ -48,10 +49,12 @@ bun run build:web
 
 ### Code Quality
 ```bash
-# Lint code
-bun lint
+# Lint and format with Biome
+bun lint               # Check code quality
+bun lint:fix           # Auto-fix issues (planned)
 
-# Format is automatic via lint-staged on commit
+# Git hooks run automatically via Lefhook on commit
+# Biome format runs on staged files
 ```
 
 ### Package Management
@@ -71,12 +74,21 @@ This project follows **Clean Architecture** with **MVVM** pattern and **Dependen
 
 ```
 src/
+├── app/            # Expo Router - File-based routing (replaces navigation/)
 ├── core/           # Contracts and interfaces (HttpClient, StorageClient, etc.)
-├── data/           # Data layer implementation (repositories, DTOs, mappers)
-├── domain/         # Business logic (entities, use cases, repository interfaces)
-├── infra/          # External tools adapters (HTTP, storage, analytics)
-├── main/           # Entry point, factories, dependency injection
-└── presentation/   # UI layer (components, screens, navigation, themes)
+│   ├── contracts/  # Interface definitions
+│   ├── infra/      # Infrastructure implementations
+│   └── utils/      # Shared utilities
+├── data/           # Data layer implementation (repositories, DTOs, mappers - not yet implemented)
+├── domain/         # Business logic (entities, use cases, repository interfaces - not yet implemented)
+└── presentation/   # UI layer (components, screens, themes, hooks, providers)
+    ├── assets/     # Images, fonts, static resources
+    ├── components/ # Reusable UI components
+    ├── hooks/      # Custom React hooks
+    ├── providers/  # Context providers
+    ├── screens/    # Screen components
+    ├── themes/     # Theme configuration
+    └── types/      # TypeScript type definitions
 ```
 
 ### Key Architectural Principles
@@ -134,18 +146,12 @@ Routes are defined by file structure in `src/app/`:
 
 ```
 src/app/
-├── (access)/          # Auth group
-│   ├── login.tsx
-│   ├── register.tsx
-│   └── recover.tsx
+├── (access)/          # Auth group (routes not yet implemented)
 ├── (tabs)/            # Tab navigation group
-│   ├── home.tsx
-│   ├── list/
-│   │   ├── create.tsx
-│   │   └── [listId].tsx
-│   └── _layout.tsx
+│   ├── _layout.tsx    # Tab layout configuration
+│   └── lists/         # Lists feature
+│       └── _layout.tsx
 ├── _layout.tsx        # Root layout
-├── index.tsx          # Home/entry point
 └── +not-found.tsx     # 404 page
 ```
 
@@ -176,9 +182,16 @@ The app integrates multiple Firebase services:
 - Images: `src/presentation/assets/images/` (note: some configs use `src/ui/assets/images/`)
 - Fonts: `src/presentation/assets/fonts/Inter/`
 
-### Pre-commit Hooks
-- Prettier runs automatically via lint-staged on all staged files
-- Configured with Husky
+### Code Quality Tools
+- **Biome 2.2.6** is used for both linting and formatting (replaces ESLint + Prettier)
+- **Lefhook** manages git hooks (replaces Husky)
+- Biome runs automatically on staged files via Lefhook pre-commit hook
+- Configuration: `biome.json` with strict rules including:
+  - Tab indentation, LF line endings
+  - No magic numbers, no implicit booleans
+  - Import cycle detection, secrets detection
+  - React function components enforced
+  - Max 5 parameters per function
 
 ## Testing Strategy
 
@@ -210,6 +223,20 @@ The app integrates multiple Firebase services:
 - Receive all data via props
 - Use global theme from `src/presentation/themes/`
 
+## Project Status
+
+This project is in **early development stage**:
+- ✅ Project structure and architecture defined
+- ✅ Expo Router configured with typed routes
+- ✅ Firebase integration setup
+- ✅ Code quality tools configured (Biome + Lefhook)
+- ✅ Theme system foundation
+- ⏳ Domain and Data layers (entities, use cases, repositories) - not yet implemented
+- ⏳ Screen implementations - minimal implementation so far
+- ⏳ Component library - in progress
+
 ## Additional Documentation
 
-Detailed architecture guide available in Portuguese at: `src/docs/arquitetura.md`
+- Detailed architecture guide (Portuguese): `src/docs/arquitetura.md`
+- Social impact manifesto: `MANIFESTO.md`
+- Project README: `README.md`

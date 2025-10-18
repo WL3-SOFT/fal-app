@@ -1,5 +1,5 @@
-import { NotFoundView } from "@presentation/screens";
+import { NotFoundView } from "@/presentation/screens";
 
 export default function NotFound() {
-  return <NotFoundView />;
+	return <NotFoundView />;
 }

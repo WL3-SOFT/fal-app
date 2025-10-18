@@ -1,13 +1,13 @@
-import { Icon } from "@/presentation/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import type { Icon } from "@/presentation/types";
 
 export const ListBox = ({ size = 24, color = "black", ...rest }: Icon) => {
-  return (
-    <MaterialCommunityIcons
-      name="list-box"
-      size={size}
-      color={color}
-      {...rest}
-    />
-  );
+	return (
+		<MaterialCommunityIcons
+			name="list-box"
+			size={size}
+			color={color}
+			{...rest}
+		/>
+	);
 };

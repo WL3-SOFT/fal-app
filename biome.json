@@ -1,0 +1,90 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.2.6/schema.json",
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true,
+		"defaultBranch": "main"
+	},
+	"files": {
+		"ignoreUnknown": false,
+		"includes": ["*.ts", "*.tsx", "!node_modules", "!*.lock", "**"]
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab",
+		"lineEnding": "lf",
+		"attributePosition": "multiline",
+		"bracketSameLine": true,
+		"bracketSpacing": true,
+		"formatWithErrors": true
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"correctness": {
+				"noUndeclaredVariables": "error",
+				"noUndeclaredDependencies": "error"
+			},
+			"nursery": {
+				"noImportCycles": "error",
+				"noSecrets": "error",
+				"noUnnecessaryConditions": "warn",
+				"noUnusedExpressions": "warn",
+				"useMaxParams": {
+					"options": {
+						"max": 5
+					},
+					"level": "warn"
+				},
+				"useReactFunctionComponents": "error"
+			},
+			"performance": {
+				"noAwaitInLoops": "error"
+			},
+			"style": {
+				"noImplicitBoolean": "error",
+				"noMagicNumbers": "error",
+				"noUselessElse": "warn",
+				"useAsConstAssertion": "info",
+				"useAtIndex": "info",
+				"useConsistentArrayType": "error",
+				"useDefaultSwitchClause": "error",
+				"useDefaultParameterLast": "error",
+				"useEnumInitializers": "error",
+				"useExplicitLengthCheck": "warn",
+				"useForOf": "info",
+				"useNamingConvention": "error",
+				"useReadonlyClassProperties": "error",
+				"useTemplate": "error",
+				"useTrimStartEnd": "error",
+				"recommended": true
+			}
+		},
+		"domains": {
+			"project": "recommended",
+			"react": "recommended",
+			"test": "recommended"
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "double",
+			"arrowParentheses": "always",
+			"enabled": true,
+			"attributePosition": "multiline",
+			"jsxQuoteStyle": "double",
+			"bracketSameLine": true
+		}
+	},
+	"assist": {
+		"enabled": true,
+		"actions": {
+			"source": {
+				"organizeImports": "on",
+				"recommended": true
+			}
+		}
+	}
+}

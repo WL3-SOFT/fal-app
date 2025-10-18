@@ -21,5 +21,4 @@ FFFFFFFFFFF  AAAAAAA                   AAAAAAALLLLLLLLLLLLLLLLLLLLLLLL
 
 console.log("\nFaça a lista, que o resto da gente faz!\n");
 
-import "reflect-metadata";
 import "expo-router/entry";

@@ -1,5 +1,5 @@
-import { HomeView } from "@presentation/screens";
+import { HomeView } from "@/presentation/screens";
 
 export default function Index() {
-  return <HomeView />;
+	return <HomeView />;
 }

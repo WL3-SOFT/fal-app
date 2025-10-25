@@ -2,7 +2,7 @@
 import Storage from "expo-sqlite/kv-store";
 import type { Storage as StorageContract } from "@/core/contracts";
 
-export class AsyncStorageClient implements StorageContract {
+export class SqliteStorageClient implements StorageContract {
 	async get<T = any>(key: string): Promise<T | null> {
 		try {
 			const rawValue = await Storage.getItem(key);

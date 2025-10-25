@@ -2,8 +2,8 @@ import type { spacing, typography } from "../themes/tokens";
 
 interface Colors {
 	primary: string;
-	primaryLight: string;
-	primaryDark: string;
+	secondary: string;
+	tertiary: string;
 
 	background: string;
 	surface: string;
@@ -37,6 +37,12 @@ interface Colors {
 		error: string;
 		disabled: string;
 		default: string;
+	};
+
+	saveSummary: {
+		title: string;
+		price: string;
+		count: string;
 	};
 }
 

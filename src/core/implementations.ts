@@ -1,10 +1,10 @@
-import type { IHttpClient, IStorage } from "./contracts";
+import type { HttpClient, Storage } from "./contracts";
 import {
-	AsyncStorageClient,
 	NativeHttpClient,
 	SecureStoreClient,
+	SqliteStorageClient,
 } from "./infra";
 
-export const httpClient: IHttpClient = new NativeHttpClient();
-export const vault: IStorage = new SecureStoreClient();
-export const storage: IStorage = new AsyncStorageClient();
+export const httpClient: HttpClient = new NativeHttpClient();
+export const vault: Storage = new SecureStoreClient();
+export const storage: Storage = new SqliteStorageClient();

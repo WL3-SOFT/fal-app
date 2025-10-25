@@ -10,7 +10,7 @@ export const createGreetingMessageStyles = (theme: Theme) => {
 		},
 		text: {
 			textAlign: "left",
-			fontFamily: theme.typography.fontFamily.regular,
+			fontFamily: theme.typography.fontFamily.primary,
 			fontSize: theme.typography.fontSize.lg1,
 			color: theme.colors.text,
 			fontWeight: theme.typography.fontWeight.semiBold,

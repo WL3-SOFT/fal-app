@@ -6,6 +6,7 @@ export const createDisplayCardStyles = (
 	theme: Theme,
 	props: DisplayCardProps,
 ) => {
+	const baseCardSize = theme.spacing.lg2;
 	const dimensions: Record<
 		DisplayCardSize,
 		{
@@ -15,28 +16,32 @@ export const createDisplayCardStyles = (
 	> = {
 		small: {
 			flex: 1,
-			width: theme.spacing.lg3,
+			width: baseCardSize,
 		},
 		medium: {
 			flex: 2,
-			width: theme.spacing.lg3 * 2,
+			width: baseCardSize * 2,
 		},
 		large: {
 			flex: 3,
 			// biome-ignore lint/style/noMagicNumbers: Não é um número mágico
-			width: theme.spacing.lg3 * 3,
+			width: baseCardSize * 3,
 		},
 	};
 	return StyleSheet.create({
 		container: {
-			backgroundColor: "silver",
-			borderRadius: theme.borderRadius.sm,
-			padding: theme.spacing.sm3,
 			...(props.isFlex && { flex: dimensions[props.size || "small"].flex }),
 			...(!props.isFlex && {
-				minWidth: dimensions[props.size || "small"].width,
+				width: dimensions[props.size || "small"].width,
 			}),
-			minHeight: theme.spacing.lg3,
+			height: baseCardSize,
+			borderRadius: theme.borderRadius.sm,
+			backgroundColor: props.backgroundColor || "silver",
+			color: props.color || theme.colors.text,
+			padding: theme.spacing.sm1,
+		},
+		content: {
+			flex: 1,
 		},
 	});
 };

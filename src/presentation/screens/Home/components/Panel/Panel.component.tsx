@@ -1,16 +1,11 @@
+import { Image } from "expo-image";
 import { useMemo } from "react";
-import { FlatList, Text, View } from "react-native";
+import { FlatList, View } from "react-native";
+import { menuOptions } from "@/core";
 import { DisplayCard } from "@/presentation/components";
 import { useTheme } from "@/presentation/hooks";
 import { MyLists, SaveSummary } from "./components";
 import { createPanelStyles } from "./Panel.styles";
-
-const options = [
-	{ id: "1", title: "Mais vendidos" },
-	{ id: "2", title: "Ofertas" },
-	{ id: "3", title: "Promoções" },
-	{ id: "4", title: "Categorias" },
-];
 
 export const Panels = () => {
 	const { theme } = useTheme();
@@ -28,16 +23,26 @@ export const Panels = () => {
 				renderItem={({ item }) => (
 					<DisplayCard
 						size="small"
+						backgroundColor={item.backgroundColor}
 						onPress={() => {
-							console.log(item.title);
-						}}
-						style={{ marginRight: theme.spacing.sm2 }}>
-						<Text>{item.title}</Text>
+							console.log(`Ir para ${item.title}`);
+						}}>
+						<Image
+							source={item.image}
+							contentFit="cover"
+							style={{
+								flex: 1,
+							}}
+							priority="high"
+						/>
 					</DisplayCard>
 				)}
 				horizontal={true}
-				data={options}
-				keyExtractor={(item) => item.id}></FlatList>
+				data={menuOptions}
+				keyExtractor={(item) => item.id}
+				ItemSeparatorComponent={() => (
+					<View style={{ width: theme.spacing.sm2 }} />
+				)}></FlatList>
 		</View>
 	);
 };

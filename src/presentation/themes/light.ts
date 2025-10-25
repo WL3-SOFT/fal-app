@@ -4,8 +4,8 @@ import { colors, spacing, typography } from "./tokens";
 export const lightTheme: Theme = {
 	colors: {
 		primary: colors.primary["6"],
-		primaryLight: colors.primary["3"],
-		primaryDark: colors.primary["11"],
+		secondary: colors.secondary["6"],
+		tertiary: colors.tertiary["6"],
 
 		background: colors.neutral.white,
 		surface: colors.neutral["2"],
@@ -37,6 +37,11 @@ export const lightTheme: Theme = {
 			error: colors.primary["1"],
 			disabled: colors.neutral["4"],
 			default: colors.primary["6"],
+		},
+		saveSummary: {
+			title: colors.primary["10"],
+			price: colors.neutral.white,
+			count: colors.neutral.white,
 		},
 	},
 	spacing,

@@ -8,4 +8,6 @@ export type DisplayCardProps = {
 	children: React.ReactNode;
 	isFlex?: boolean;
 	style?: StyleProp<ViewStyle>;
+	backgroundColor?: string;
+	color?: string;
 };

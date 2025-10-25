@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { StyleSheet, TouchableHighlight, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useTheme } from "@/presentation/hooks";
 import { createDisplayCardStyles } from "./DisplayCard.styles";
 import type { DisplayCardProps } from "./DisplayCard.types";
@@ -12,12 +12,22 @@ export const DisplayCard = (props: DisplayCardProps) => {
 		[theme, props],
 	);
 
+	if (!onPress) {
+		return (
+			<View
+				style={StyleSheet.compose(styles.container, props.style)}
+				testID="menu-card">
+				<View style={styles.content}>{children}</View>
+			</View>
+		);
+	}
+
 	return (
-		<TouchableHighlight
+		<TouchableOpacity
 			style={StyleSheet.compose(styles.container, props.style)}
 			testID="menu-card"
 			onPress={onPress}>
-			<View>{children}</View>
-		</TouchableHighlight>
+			<View style={styles.content}>{children}</View>
+		</TouchableOpacity>
 	);
 };

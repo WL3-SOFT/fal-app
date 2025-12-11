@@ -32,7 +32,7 @@ yarn-error.*
 *.pem
 
 # local env files
-.env*.local
+*.local
 
 # typescript
 *.tsbuildinfo
@@ -45,3 +45,5 @@ app-example
 
 # google services
 google-services.json
+
+.zed

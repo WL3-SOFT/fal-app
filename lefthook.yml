@@ -1,23 +1,28 @@
 pre-commit:
-  commands:
-    check:
-      glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
-      run: bunx @biomejs/biome check --write --no-errors-on-unmatched --files-ignore-unknown=true --colors=off {staged_files}
+  parallel: true
+  jobs:
+    - name: Check application
+      run: bunx biome check --write --no-errors-on-unmatched --files-ignore-unknown=true --colors=off {staged_files}
+      glob: "*.{js,ts,jsx,tsx,json,jsonc}"
       stage_fixed: true
-
-commit-msg:
-  commands:
-    conventional-commits:
-      run: bunx git-conventional-commits commit-msg-hook "{1}"
 
 prepare-commit-msg:
   commands:
-    conventional-commits:
+    commitzen:
+      skip:
+        - "merge"
+        - "rebase"
       interactive: true
-      run: bunx git-conventional-commits commit-prompt "{1}"
+      run: bunx cz --hook # Or npx cz --hook
+      env:
+        LEFTHOOK: "0"
 
-pre-push:
+commit-msg:
   commands:
-    check:
-      glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
-      run: bunx @biomejs/biome check --no-errors-on-unmatched --files-ignore-unknown=true --colors=off {push_files}
+    "lint commit message":
+      run: bunx commitlint --edit {1}
+# pre-push:
+#   commands:
+#     check:
+#       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
+#       run: bunx @biomejs/biome check --no-errors-on-unmatched --files-ignore-unknown=true --colors=off {push_files}

@@ -7,11 +7,12 @@
 ![License](https://img.shields.io/badge/License-GNU%20Lesser%20General%20Public%20License-green?style=for-the-badge)
 
 <div align="center">
-  <img src="./src/presentation/assets/images/logo-faca-lista.png" alt="Faça a Lista Logo" width="200"/>
+  <img src="./src/ui/assets/images/logo-faca-lista.png" alt="Faça a Lista Logo" width="200"/>
 
-  ### **Por um Brasil onde ninguém precise escolher entre comer hoje ou amanhã**
+### **Por um Brasil onde ninguém precise escolher entre comer hoje ou amanhã**
 
-  [Website](https://facaalista.com.br) · [Blog](https://blog.facaalista.com.br) · [Manifesto](./MANIFESTO.md) · [Documentação](./docs)
+[Website](https://facaalista.com.br) · [Blog](https://blog.facaalista.com.br) · [Manifesto](./MANIFESTO.md) · [Documentação](./docs)
+
 </div>
 
 ---
@@ -22,7 +23,7 @@
 
 ### 🎯 Nossa Missão
 
-> *"Transformar dados em ferramenta de combate à fome, garantindo que cada brasileiro saiba onde está o pão mais barato."*
+> _"Transformar dados em ferramenta de combate à fome, garantindo que cada brasileiro saiba onde está o pão mais barato."_
 
 ### 📊 O Problema que Resolvemos
 
@@ -151,7 +152,7 @@ src/
 │   ├── repositories/     # Contratos de repos
 │   └── useCases/        # Casos de uso
 │
-└── presentation/           # 🎨 Interface do Usuário
+└── ui/           # 🎨 Interface do Usuário
     ├── components/       # Componentes reutilizáveis
     ├── screens/         # Telas (View + ViewModel)
     └── themes/          # Sistema de temas
@@ -160,22 +161,26 @@ src/
 ## 🛠️ Stack Tecnológica
 
 ### Mobile
+
 - **React Native** 0.81.4 com New Architecture
 - **Expo SDK** 54.0.9 (Managed Workflow)
 - **TypeScript** 5.9.2
 - **Expo Router** v6 (File-based routing)
 
 ### Backend Services
+
 - **Firebase** Suite completa (Auth, Firestore, Analytics, Crashlytics)
 - **Sentry** Error tracking e performance
 - **API REST** Custom com cache inteligente
 
 ### Armazenamento
+
 - **expo-secure-store** Tokens e dados sensíveis
 - **expo-sqlite** Banco local para offline-first
 - **AsyncStorage** Cache e preferências
 
 ### Qualidade
+
 - **ESLint** + **Prettier** Padronização de código
 - **Husky** + **lint-staged** Git hooks
 - **Jest** + **Testing Library** Testes automatizados
@@ -273,8 +278,8 @@ Este projeto está sob licença GNU LESSER GENERAL PUBLIC LICENSE - veja [LICENS
 
 **#FaçaALista #BrasilSemFome #TecnologiaPopular #RevoluçãoNoCarrinho**
 
-*"Porque quando o povo tem informação, o povo tem poder.*
-*E quando o povo tem poder, o Brasil não tem fome."*
+_"Porque quando o povo tem informação, o povo tem poder._
+_E quando o povo tem poder, o Brasil não tem fome."_
 
 **Desenvolvido com ❤️ por Wellington Braga**
 

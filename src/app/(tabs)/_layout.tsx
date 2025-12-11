@@ -1,12 +1,7 @@
 import { Tabs } from "expo-router";
-import {
-	Home,
-	HomeOutline,
-	ListBox,
-	ListBoxOutline,
-} from "@/presentation/assets/icons";
-import { Header } from "@/presentation/components";
-import { useTheme } from "@/presentation/hooks";
+import { Home, HomeOutline, ListBox, ListBoxOutline } from "@/ui/assets/icons";
+import { Header } from "@/ui/components";
+import { useTheme } from "@/ui/hooks";
 
 export default function TabLayout() {
 	const { theme } = useTheme();

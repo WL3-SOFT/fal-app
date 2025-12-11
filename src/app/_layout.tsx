@@ -4,8 +4,8 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StrictMode, useEffect } from "react";
 import { Appearance } from "react-native";
-import { storage } from "@/core";
-import { ThemeProvider } from "@/presentation/providers";
+import { storage } from "@/infra/modules";
+import { AppProviders, ThemeProvider } from "@/ui/providers";
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -41,16 +41,14 @@ SplashScreen.setOptions({
 });
 
 const Application = () => (
-	<StrictMode>
-		<ThemeProvider>
-			<Stack>
-				<Stack.Screen
-					name="(tabs)"
-					options={{ headerShown: false }}
-				/>
-			</Stack>
-		</ThemeProvider>
-	</StrictMode>
+	<AppProviders>
+		<Stack>
+			<Stack.Screen
+				name="(tabs)"
+				options={{ headerShown: false }}
+			/>
+		</Stack>
+	</AppProviders>
 );
 
 function RootLayout() {

@@ -5,10 +5,10 @@
 		"paths": {
 			"@/*": ["src/*"],
 			"@app/*": ["src/app/*"],
-			"@components/*": ["src/presentation/components/*"],
-			"@hooks/*": ["src/presentation/hooks/*"],
-			"@screens/*": ["src/presentation/screens/*"],
-			"@themes/*": ["src/presentation/themes/*"]
+			"@components/*": ["src/ui/components/*"],
+			"@hooks/*": ["src/ui/hooks/*"],
+			"@screens/*": ["src/ui/screens/*"],
+			"@themes/*": ["src/ui/themes/*"]
 		},
 		"experimentalDecorators": true,
 		"jsx": "react-native",

@@ -9,7 +9,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 	owner: "welllucky",
 	version: "0.1.0",
 	orientation: "portrait",
-	icon: "./src/presentation/assets/images/icon.png",
+	icon: "./src/ui/assets/images/icon.png",
 	scheme: "fal",
 	userInterfaceStyle: "automatic",
 	newArchEnabled: true,
@@ -17,12 +17,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 	android: {
 		adaptiveIcon: {
 			backgroundColor: "#E6F4FE",
-			foregroundImage:
-				"./src/presentation/assets/images/android-icon-foreground.png",
-			backgroundImage:
-				"./src/presentation/assets/images/android-icon-background.png",
-			monochromeImage:
-				"./src/presentation/assets/images/android-icon-monochrome.png",
+			foregroundImage: "./src/ui/assets/images/android-icon-foreground.png",
+			backgroundImage: "./src/ui/assets/images/android-icon-background.png",
+			monochromeImage: "./src/ui/assets/images/android-icon-monochrome.png",
 		},
 		edgeToEdgeEnabled: true,
 		predictiveBackGestureEnabled: false,
@@ -44,19 +41,19 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 		[
 			"expo-font",
 			{
-				fonts: ["./src/presentation/assets/fonts/Inter/Inter.ttf"],
+				fonts: ["./src/ui/assets/fonts/Inter/Inter.ttf"],
 				android: {
 					fonts: [
 						{
 							fontFamily: "Inter",
 							fontDefinitions: [
 								{
-									path: "./src/presentation/assets/fonts/Inter/Inter-Italic.ttf",
+									path: "./src/ui/assets/fonts/Inter/Inter-Italic.ttf",
 									weight: 700,
 									style: "italic",
 								},
 								{
-									path: "./src/presentation/assets/fonts/Inter/Inter.ttf",
+									path: "./src/ui/assets/fonts/Inter/Inter.ttf",
 									weight: 700,
 								},
 							],
@@ -65,8 +62,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 				},
 				ios: {
 					fonts: [
-						"./src/presentation/assets/fonts/Inter/Inter.ttf",
-						"./src/presentation/assets/fonts/Inter/Inter-Italic.ttf",
+						"./src/ui/assets/fonts/Inter/Inter.ttf",
+						"./src/ui/assets/fonts/Inter/Inter-Italic.ttf",
 					],
 				},
 			},
@@ -80,13 +77,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 		[
 			"expo-splash-screen",
 			{
-				image: "./src/presentation/assets/images/splash-icon-light.png",
+				image: "./src/ui/assets/images/splash-icon-light.png",
 				imageWidth: 200,
 				resizeMode: "contain",
 				backgroundColor: "#E9F0E4",
 				dark: {
 					backgroundColor: "#1B4F1B",
-					image: "./src/presentation/assets/images/splash-icon-dark.png",
+					image: "./src/ui/assets/images/splash-icon-dark.png",
 				},
 			},
 		],

@@ -22,7 +22,7 @@ export default function ListsLayout() {
 				name="create"
 				options={{
 					title: "Nova Lista",
-					presentation: "modal",
+					ui: "modal",
 				}}
 			/>
 		</Stack>

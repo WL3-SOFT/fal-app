@@ -15,104 +15,77 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Routing**: Expo Router ~6.0.10 (file-based routing with typed routes)
 - **Firebase**: Multiple Firebase services integrated (@react-native-firebase/*)
 - **Monitoring**: Sentry 7.1.0 for error tracking
-- **Code Quality**: Biome 2.2.6 (formatter + linter), Lefhook for git hooks
-- **Node Version**: >= 20.19.4 (minimum required)
+- **Code Quality**: Biome 2.2.6 (formatter + linter), Lefthook for git hooks
 
 ## Essential Commands
 
-### Development
 ```bash
-# Start development server
-bun start
+# Development
+bun start              # Start Expo development server
+bun android            # Run on Android
+bun ios                # Run on iOS
+bun web                # Run on web
 
-# Run on Android
-bun android
+# Building
+bun prebuild           # Prebuild native folders (clean)
+bun compile            # Build Android release (gradlew bundleRelease)
 
-# Run on web
-bun web
+# Code Quality
+bun check              # Lint and format with Biome (--write)
 
-# Run on iOS
-bun ios
-```
-
-### Building
-```bash
-# Prebuild native folders (clean)
-bun prebuild
-
-# Build Android release
-bun compile
-
-# Build web
-bun run build:web
-```
-
-### Code Quality
-```bash
-# Lint and format with Biome
-bun lint               # Check code quality
-bun lint:fix           # Auto-fix issues (planned)
-
-# Git hooks run automatically via Lefhook on commit
-# Biome format runs on staged files
-```
-
-### Package Management
-```bash
-# Add dependency (uses expo install)
-bun add [package]
-
-# Remove dependency (uses expo remove)
-bun rm [package]
+# Package Management (uses expo install/remove)
+bun ad [package]       # Add dependency
+bun rm [package]       # Remove dependency
 ```
 
 ## Architecture
 
-This project follows **Clean Architecture** with **MVVM** pattern and **Dependency Inversion** principle. The architecture is organized in layers:
+This project follows **Clean Architecture** with **MVVM** pattern and **Dependency Inversion** principle.
 
 ### Layer Structure
 
 ```
 src/
-├── app/            # Expo Router - File-based routing (replaces navigation/)
-├── core/           # Contracts and interfaces (HttpClient, StorageClient, etc.)
-│   ├── contracts/  # Interface definitions
-│   ├── infra/      # Infrastructure implementations
-│   └── utils/      # Shared utilities
-├── data/           # Data layer implementation (repositories, DTOs, mappers - not yet implemented)
-├── domain/         # Business logic (entities, use cases, repository interfaces - not yet implemented)
-└── presentation/   # UI layer (components, screens, themes, hooks, providers)
-    ├── assets/     # Images, fonts, static resources
-    ├── components/ # Reusable UI components
-    ├── hooks/      # Custom React hooks
-    ├── providers/  # Context providers
-    ├── screens/    # Screen components
-    ├── themes/     # Theme configuration
-    └── types/      # TypeScript type definitions
+├── app/              # Expo Router - File-based routing
+├── core/             # Contracts, interfaces, and constraints
+│   ├── constraints/  # Business constraints/constants
+│   └── interfaces/   # Interface definitions (HttpClient, StorageClient, etc.)
+├── infra/            # Infrastructure implementations
+│   └── modules/      # Concrete implementations (http, storage)
+├── types/            # Shared TypeScript type definitions
+└── ui/               # UI layer (MVVM)
+    ├── assets/       # Images, fonts, icons
+    ├── components/   # Reusable UI components
+    ├── hooks/        # Custom React hooks
+    ├── providers/    # Context providers (Theme, App)
+    ├── screens/      # Screen components (View + ViewModel)
+    ├── theme/        # Theme configuration (light, dark, tokens)
+    └── utils/        # UI utilities
 ```
 
 ### Key Architectural Principles
 
 1. **Business logic isolation**: Domain layer has NO external dependencies
-2. **MVVM in Presentation**: Each screen has a View + ViewModel pattern
-3. **Dependency Inversion**: Never import libraries directly in business logic - use adapters in `infra/` that implement interfaces from `core/contracts/`
+2. **MVVM in UI**: Each screen has a View + ViewModel pattern
+3. **Dependency Inversion**: Never import libraries directly in business logic - use adapters in `infra/` that implement interfaces from `core/interfaces/`
 
 ### Screen Structure Pattern
 
-Each screen follows this structure:
 ```
-src/presentation/screens/FeatureName/
-├── index.ts                    # Export
-├── FeatureNameView.tsx         # UI only (presentational)
-└── useFeatureNameViewModel.ts  # State and logic
+src/ui/screens/FeatureName/
+├── index.ts                      # Export
+├── FeatureName.view.tsx          # UI only
+├── FeatureName.viewModel.ts      # State and logic (hook)
+├── FeatureName.styles.ts         # Styled components
+└── components/                   # Screen-specific components
 ```
 
 ### Adding New Dependencies
 
 **CRITICAL**: Never use external libraries directly in domain/business logic!
 
-1. Define contract interface in `src/core/contracts/`
-2. Create adapter in `src/infra/` that implements the interface
+1. Define interface in `src/core/interfaces/modules/`
+2. Create adapter in `src/infra/modules/` that implements the interface
 3. Inject the interface (not implementation) into use cases/repositories
 
 ## TypeScript Configuration
@@ -122,15 +95,10 @@ src/presentation/screens/FeatureName/
 ```typescript
 @/*           -> ./src/*
 @app/*        -> ./src/app/*
-@components/* -> ./src/presentation/components/*
-@hooks/*      -> ./src/presentation/hooks/*
-@screens/*    -> ./src/presentation/screens/*
-@themes/*     -> ./src/presentation/themes/*
-@utils/*      -> ./src/core/utils/*
-@core/*       -> ./src/core/*
-@data/*       -> ./src/data/*
-@domain/*     -> ./src/domain/*
-@presentation/* -> ./src/presentation/*
+@components/* -> ./src/ui/components/*
+@hooks/*      -> ./src/ui/hooks/*
+@screens/*    -> ./src/ui/screens/*
+@themes/*     -> ./src/ui/themes/*
 ```
 
 ### TypeScript Strict Mode
@@ -146,97 +114,75 @@ Routes are defined by file structure in `src/app/`:
 
 ```
 src/app/
-├── (access)/          # Auth group (routes not yet implemented)
+├── (access)/          # Auth group (login, register, recover)
 ├── (tabs)/            # Tab navigation group
 │   ├── _layout.tsx    # Tab layout configuration
-│   └── lists/         # Lists feature
-│       └── _layout.tsx
+│   ├── index.tsx      # Home tab
+│   └── lists/         # Lists feature (Stack)
+│       ├── _layout.tsx
+│       ├── index.tsx
+│       ├── create.tsx
+│       └── [id].tsx   # Dynamic route
 ├── _layout.tsx        # Root layout
 └── +not-found.tsx     # 404 page
 ```
 
 - **Typed routes enabled**: `experiments.typedRoutes: true` in app.config.ts
-- Generated types in `.expo/types/router.d.ts`
+- **React Compiler enabled**: `experiments.reactCompiler: true`
 
 ## Firebase Integration
 
 The app integrates multiple Firebase services:
-- Authentication
-- Analytics
-- Crashlytics
-- Messaging (Push notifications)
-- App Check
-- App Distribution
-- Remote Config
+- Authentication, Analytics, Crashlytics
+- Messaging (Push notifications), App Check
+- App Distribution, Remote Config
 
 **Note**: `google-services.json` is gitignored - developers need their own Firebase config.
 
 ## Important Notes
 
 ### React 19 Compatibility
+
 - This project uses React 19.1.0 which is officially supported by Expo SDK 54
 - Do NOT install `@types/react-native` - React Native 0.81 provides its own types
 - Avoid `verbatimModuleSyntax: true` in tsconfig - it causes JSX conflicts
 
-### Asset Paths
-- Images: `src/presentation/assets/images/` (note: some configs use `src/ui/assets/images/`)
-- Fonts: `src/presentation/assets/fonts/Inter/`
-
 ### Code Quality Tools
+
 - **Biome 2.2.6** is used for both linting and formatting (replaces ESLint + Prettier)
-- **Lefhook** manages git hooks (replaces Husky)
-- Biome runs automatically on staged files via Lefhook pre-commit hook
-- Configuration: `biome.json` with strict rules including:
+- **Lefthook** manages git hooks (pre-commit runs biome check, commit-msg enforces conventional commits)
+- Key Biome rules:
   - Tab indentation, LF line endings
-  - No magic numbers, no implicit booleans
-  - Import cycle detection, secrets detection
-  - React function components enforced
-  - Max 5 parameters per function
+  - `noMagicNumbers`, `noImplicitBoolean`
+  - `noImportCycles`, `noSecrets`
+  - `useReactFunctionComponents` (no class components)
+  - `useMaxParams: 5`
+  - `useNamingConvention` enforced
 
-## Testing Strategy
+### Conventional Commits
 
-1. **Unit Tests** (ViewModels, UseCases, Mappers):
-   - Mock dependencies using interfaces
-   - Test files alongside implementation (`.test.ts`)
-
-2. **Component Tests** (Views):
-   - Use `@testing-library/react-native`
-   - Mock ViewModels to test UI rendering
-   - Test files alongside components (`.test.tsx`)
-
-## Development Workflow
-
-### Creating a New Screen
-
-1. Create folder in `src/presentation/screens/ScreenName/`
-2. Define domain entities in `src/domain/entities/`
-3. Create use case in `src/domain/usecases/`
-4. Implement repository in `src/data/repositories/`
-5. Create ViewModel hook `useScreenNameViewModel.ts`
-6. Create View component `ScreenNameView.tsx`
-7. Add route file in `src/app/` following Expo Router conventions
-
-### Creating Reusable Components
-
-- Location: `src/presentation/components/`
-- Should be "dumb" (presentational only)
-- Receive all data via props
-- Use global theme from `src/presentation/themes/`
+Git hooks enforce conventional commit format via `git-conventional-commits`:
+- `feat:` new feature
+- `fix:` bug fix
+- `docs:` documentation
+- `style:` formatting
+- `refactor:` code refactoring
+- `test:` tests
+- `chore:` maintenance
 
 ## Project Status
 
 This project is in **early development stage**:
-- ✅ Project structure and architecture defined
-- ✅ Expo Router configured with typed routes
-- ✅ Firebase integration setup
-- ✅ Code quality tools configured (Biome + Lefhook)
-- ✅ Theme system foundation
-- ⏳ Domain and Data layers (entities, use cases, repositories) - not yet implemented
-- ⏳ Screen implementations - minimal implementation so far
-- ⏳ Component library - in progress
+
+- Project structure and architecture defined
+- Expo Router configured with typed routes
+- Firebase integration setup
+- Code quality tools configured (Biome + Lefthook)
+- Theme system foundation
+- Domain and Data layers (entities, use cases, repositories) - not yet implemented
+- Screen implementations - minimal
 
 ## Additional Documentation
 
-- Detailed architecture guide (Portuguese): `src/docs/arquitetura.md`
+- Database schema: `docs/database-schema.md`
 - Social impact manifesto: `MANIFESTO.md`
-- Project README: `README.md`

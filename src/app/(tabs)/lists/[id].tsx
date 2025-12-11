@@ -1,4 +1,4 @@
-import { ListDetailView } from "@/presentation/screens/Lists/Detail";
+import { ListDetailView } from "@/ui/screens/Lists/Detail";
 
 export default function List() {
 	return <ListDetailView />;

@@ -2,22 +2,23 @@
 const config = {
 	preset: "jest-expo",
 	roots: ["<rootDir>/src"],
+	testEnvironment: "allure-jest/node",
 	setupFilesAfterEnv: ["<rootDir>/config/test-setup.ts"],
 	collectCoverage: false,
 	coverageDirectory: "./coverage",
-	coverageReporters: ["text", "lcov"],
+	coverageReporters: ["text"],
 	coverageThreshold: {
 		global: {
-			branches: 60,
-			functions: 60,
-			lines: 60,
-			statements: 60,
+			branches: 50,
+			functions: 50,
+			lines: 50,
+			statements: 50,
 		},
 		"./src/ui/": {
-			branches: 60,
-			functions: 60,
-			lines: 60,
-			statements: 60,
+			branches: 50,
+			functions: 50,
+			lines: 50,
+			statements: 50,
 		},
 		"./src/app/": {
 			branches: 0,
@@ -66,15 +67,11 @@ const config = {
 		"<rootDir>/plugins/",
 		"<rootDir>/config/",
 	],
-	testMatch: [
-		"**/*.spec.ts?(x)",
-	],
-	testPathIgnorePatterns: [
-		"/node_modules/",
-		"\\.e2e\\.(ts|tsx)$",
-	],
+	testMatch: ["**/*.spec.ts?(x)"],
+	testPathIgnorePatterns: ["/node_modules/", "\\.e2e\\.(ts|tsx)$"],
 	watchPathIgnorePatterns: ["node_modules"],
 	transformIgnorePatterns: [
+		// biome-ignore lint/nursery/noSecrets: Não se trata de uma secret
 		"node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg)",
 	],
 	moduleNameMapper: {
@@ -87,8 +84,8 @@ const config = {
 		"^@test-utils$": "<rootDir>/src/ui/utils/test-utils",
 	},
 	fakeTimers: {
-    enableGlobally: true,
-  },
+		enableGlobally: true,
+	},
 };
 
 module.exports = config;

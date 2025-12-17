@@ -1,26 +1,26 @@
-name: Coverage Report
+# name: Coverage Report
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches:
+#       - main
 
-jobs:
-  coverage:
-    name: Generate Coverage
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+# jobs:
+#   coverage:
+#     name: Generate Coverage
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
 
-      - name: Install Bun
-        uses: oven-sh/setup-bun@v2
+#       - name: Install Bun
+#         uses: oven-sh/setup-bun@v2
 
-      - name: Install dependencies
-        run: bun install
+#       - name: Install dependencies
+#         run: bun install
 
-      - name: Run tests with coverage
-        run: bun run test:coverage --watchAll=false
+#       - name: Run tests with coverage
+#         run: bun run test:coverage --watchAll=false

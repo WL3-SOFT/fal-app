@@ -47,7 +47,12 @@ app-example
 google-services.json
 
 .zed
+.allure
 
 coverage/
+
+# Allure Report
+allure-results/
+allure-report/
 
 lefthook-local.yml

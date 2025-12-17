@@ -11,4 +11,4 @@ spaces_around_brackets=outside
 [*.{js,ts,tsx,jsx,json}]
 charset=utf-8
 indent_style=tab
-indent_size=4
+indent_size=2

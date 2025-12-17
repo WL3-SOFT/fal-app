@@ -9,7 +9,7 @@ export const GreetingMessage = () => {
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.text}>
+			<Text style={styles.text} testID="greeting-message">
 				Bom dia, <Text style={styles.name}>Aline!</Text>
 			</Text>
 		</View>

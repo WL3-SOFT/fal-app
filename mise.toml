@@ -1,2 +1,7 @@
 [tools]
 bun = "1.2.22"
+
+[env]
+_.file = '.env'
+NODE_ENV = 'production'
+EXPO_PUBLIC_SENTRY_DSN = {required = true}

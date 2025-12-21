@@ -9,7 +9,7 @@
 			"@hooks/*": ["src/ui/hooks/*"],
 			"@screens/*": ["src/ui/screens/*"],
 			"@themes/*": ["src/ui/themes/*"],
-			"@test-utils": ["src/ui/utils/test-utils"]
+			"#test-utils": ["src/ui/utils/test-utils"]
 		},
 		"experimentalDecorators": true,
 		"jsx": "react-native",
@@ -38,6 +38,6 @@
 		"expo-env.d.ts",
 		"src/**/*",
 		"plugins",
-		".expo/types/**/*.ts",
+		".expo/types/**/*.ts"
 	]
 }

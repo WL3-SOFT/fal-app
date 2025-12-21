@@ -32,7 +32,7 @@ yarn-error.*
 *.pem
 
 # local env files
-*.local
+*.local*
 
 # typescript
 *.tsbuildinfo
@@ -48,6 +48,7 @@ google-services.json
 
 .zed
 .allure
+.mcp.json
 
 coverage/
 
@@ -56,3 +57,5 @@ allure-results/
 allure-report/
 
 lefthook-local.yml
+
+.env.local

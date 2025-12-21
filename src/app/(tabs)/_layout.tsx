@@ -10,11 +10,11 @@ export default function TabLayout() {
 			screenOptions={{
 				tabBarActiveTintColor: theme.colors.tab.active.icon,
 				tabBarInactiveTintColor: theme.colors.tab.inactive.icon,
-				header: (props) => <Header {...props} />,
 			}}>
 			<Tabs.Screen
 				name="index"
 				options={{
+					header: (props) => <Header.principal {...props} />,
 					title: "Home",
 					tabBarIcon: ({ color, size, focused }) =>
 						focused ? (

@@ -4,10 +4,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@/ui/hooks";
 import { Avatar } from "../../Avatar";
 import { Logo } from "../../Logo";
-import { createHeaderStyles } from "./Header.styles";
-import type { HeaderProps } from "./Header.types";
+import { createHeaderStyles } from "./MinimalistHeader.styles";
+import type { HeaderProps } from "./MinimalistHeader.types";
 
-export const Header = (props: HeaderProps) => {
+export const MinimalistHeader = (props: HeaderProps) => {
 	const { navigation, route, leftElement } = props;
 
 	const shouldShowLogo =

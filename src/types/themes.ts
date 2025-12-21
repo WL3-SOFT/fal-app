@@ -18,6 +18,9 @@ interface Colors {
 	warning: string;
 	info: string;
 
+	title: string;
+	subtitle: string;
+
 	border: string;
 	divider: string;
 
@@ -36,6 +39,10 @@ interface Colors {
 		success: string;
 		error: string;
 		disabled: string;
+		default: string;
+	};
+
+	neutralButton: {
 		default: string;
 	};
 

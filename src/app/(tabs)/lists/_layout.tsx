@@ -1,30 +1,36 @@
 import { Stack } from "expo-router";
+import { Header } from "@/ui/components";
 
 export default function ListsLayout() {
 	return (
-		<Stack
-			screenOptions={{
-				headerTitle: "Minhas listas",
-			}}>
+		<Stack>
 			<Stack.Screen
 				name="index"
 				options={{
-					title: "Listas",
+					headerShown: false,
 				}}
 			/>
 			<Stack.Screen
 				name="[id]"
 				options={{
-					title: "Detalhes da Lista",
+					header(props) {
+						return (
+							<Header.minimalist
+								{...props}
+								leftElement={{
+									type: "backButton",
+								}}
+							/>
+						);
+					},
 				}}
 			/>
-			<Stack.Screen
+			{/* <Stack.Screen
 				name="create"
 				options={{
-					title: "Nova Lista",
-					ui: "modal",
+					title: "Criar Lista",
 				}}
-			/>
+			/> */}
 		</Stack>
 	);
 }

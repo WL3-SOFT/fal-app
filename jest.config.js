@@ -81,7 +81,7 @@ const config = {
 		"^@hooks/(.*)$": "<rootDir>/src/ui/hooks/$1",
 		"^@screens/(.*)$": "<rootDir>/src/ui/screens/$1",
 		"^@themes/(.*)$": "<rootDir>/src/ui/themes/$1",
-		"#test-utils$": "<rootDir>/src/ui/utils/test-utils",
+		"#test-utils$": "<rootDir>/config/test-utils.tsx",
 	},
 	fakeTimers: {
 		enableGlobally: true,

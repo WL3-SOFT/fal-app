@@ -1,4 +1,4 @@
-import { render } from "@test-utils";
+import { render } from "#test-utils";
 import { GreetingMessage } from "./GreetingMessage.component";
 
 describe("Greeting Message Test Component - Suite", () => {

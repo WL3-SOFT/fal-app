@@ -5,14 +5,14 @@ import * as SplashScreen from "expo-splash-screen";
 import { StrictMode, useEffect } from "react";
 import { Appearance } from "react-native";
 import { storage } from "@/infra/modules";
-import { AppProviders, ThemeProvider } from "@/ui/providers";
+import { AppProviders } from "@/ui/providers";
 
 const isProduction = process.env.NODE_ENV === "production";
 
 Sentry.init({
 	dsn: process.env["EXPO_PUBLIC_SENTRY_DSN"],
 	sendDefaultPii: true,
-	enableLogs: false,
+	enableLogs: true,
 	replaysSessionSampleRate: isProduction ? 1 : 0,
 	replaysOnErrorSampleRate: isProduction ? 1 : 0,
 	sampleRate: isProduction ? 1 : 0,
@@ -52,7 +52,6 @@ const Application = () => (
 );
 
 function RootLayout() {
-	const isDevMode = false;
 	useEffect(() => {
 		const setThemeMode = async () => {
 			const themeMode = await storage.get("themeMode");
@@ -63,7 +62,7 @@ function RootLayout() {
 		setThemeMode();
 	}, []);
 
-	return isDevMode ? (
+	return !isProduction ? (
 		<StrictMode>
 			<Application />
 		</StrictMode>

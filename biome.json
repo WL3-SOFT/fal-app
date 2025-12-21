@@ -47,7 +47,12 @@
 				"noUndeclaredDependencies": {
 					"level": "error",
 					"options": {
-						"devDependencies": ["**/tests/**", "*.spec.tsx", "*.test.tsx"]
+						"devDependencies": [
+							"**/tests/**",
+							"*.spec.tsx",
+							"*.test.tsx",
+							"config/*"
+						]
 					}
 				},
 				"noUndeclaredVariables": "error"

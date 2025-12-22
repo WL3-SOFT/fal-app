@@ -20,6 +20,8 @@ export const lightTheme: Theme = {
 		warning: colors.primary["3"],
 		info: colors.primary["4"],
 
+		highlightPrice: colors.primary["8"],
+
 		border: colors.neutral["4"],
 		divider: colors.neutral["4"],
 		tab: {
@@ -38,10 +40,19 @@ export const lightTheme: Theme = {
 			disabled: colors.neutral["4"],
 			default: colors.primary["6"],
 		},
+		neutralButton: {
+			default: colors.neutral["10"],
+		},
+		title: colors.neutral["10"],
+		subtitle: colors.neutral["7"],
 		saveSummary: {
 			title: colors.primary["10"],
 			price: colors.neutral.white,
 			count: colors.neutral.white,
+		},
+		legend: {
+			icon: colors.neutral["10"],
+			text: colors.neutral["10"],
 		},
 	},
 	spacing,
@@ -64,14 +75,14 @@ export const lightTheme: Theme = {
 		md: {
 			shadowColor: colors.neutral["10"],
 			shadowOffset: { width: 0, height: 2 },
-			shadowOpacity: 0.1,
+			shadowOpacity: 0.25,
 			shadowRadius: 4,
 			elevation: 3,
 		},
 		lg: {
 			shadowColor: colors.neutral["10"],
 			shadowOffset: { width: 0, height: 4 },
-			shadowOpacity: 0.15,
+			shadowOpacity: 0.5,
 			shadowRadius: 8,
 			elevation: 5,
 		},

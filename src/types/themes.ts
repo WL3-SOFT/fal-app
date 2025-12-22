@@ -24,6 +24,8 @@ interface Colors {
 	border: string;
 	divider: string;
 
+	highlightPrice: string;
+
 	tab: {
 		active: {
 			icon: string;
@@ -50,6 +52,11 @@ interface Colors {
 		title: string;
 		price: string;
 		count: string;
+	};
+
+	legend: {
+		icon: string;
+		text: string;
 	};
 }
 

@@ -8,7 +8,7 @@ import { createHeaderStyles } from "./MinimalistHeader.styles";
 import type { HeaderProps } from "./MinimalistHeader.types";
 
 export const MinimalistHeader = (props: HeaderProps) => {
-	const { navigation, route, leftElement } = props;
+	const { route, leftElement, navigation } = props;
 
 	const shouldShowLogo =
 		leftElement?.type === "logo" || route?.name === "index";

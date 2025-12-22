@@ -30,7 +30,8 @@
 			"enabled": true,
 			"jsxQuoteStyle": "double",
 			"quoteStyle": "double"
-		}
+		},
+		"globals": ["jest"]
 	},
 	"linter": {
 		"domains": {

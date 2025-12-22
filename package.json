@@ -19,7 +19,6 @@
 		"test": "jest",
 		"test:watch": "jest --watch",
 		"test:coverage": "allure run -- bun jest --coverage",
-		"test:allure": "jest --watchAll=false",
 		"coverage:open": "allure open ./allure-report --live --port 4000"
 	},
 	"dependencies": {

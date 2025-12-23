@@ -1,2 +1,2 @@
-// export * from "./DetailPanel";
 export * from "./Header";
+export * from "./NoList";

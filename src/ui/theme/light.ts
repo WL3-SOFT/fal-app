@@ -43,6 +43,11 @@ export const lightTheme: Theme = {
 		neutralButton: {
 			default: colors.neutral["10"],
 		},
+
+		fallback: {
+			text: colors.neutral["9"],
+			icon: colors.neutral["9"],
+		},
 		title: colors.neutral["10"],
 		subtitle: colors.neutral["7"],
 		saveSummary: {

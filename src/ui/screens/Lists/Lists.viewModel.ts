@@ -30,7 +30,37 @@ const data: ListCardProps[] = [
 		lowestPrice: 684.21,
 		title: "Lista de compras mensal",
 	},
+	{
+		id: "5",
+		itemsQuantity: 107,
+		lastUsed: new Date(),
+		lowestPrice: 684.21,
+		title: "Lista de compras mensal",
+	},
+	{
+		id: "6",
+		itemsQuantity: 107,
+		lastUsed: new Date(),
+		lowestPrice: 684.21,
+		title: "Lista de compras mensal",
+	},
+	{
+		id: "7",
+		itemsQuantity: 107,
+		lastUsed: new Date(),
+		lowestPrice: 684.21,
+		title: "Lista de compras mensal",
+	},
+	{
+		id: "8",
+		itemsQuantity: 107,
+		lastUsed: new Date(),
+		lowestPrice: 684.21,
+		title: "Lista de compras mensal",
+	},
 ];
+
+// const data: ListCardProps[] = [];
 
 export const useListsPage = () => {
 	const router = useRouter();
@@ -43,12 +73,15 @@ export const useListsPage = () => {
 		router.push(`/lists/${id}`);
 	};
 
-	const quantityIndicatorText =
-		data.length > 0
-			? `${data.length} lista${data.length > 1 ? "s" : ""}`
-			: "Nenhuma lista";
+	const hasContent = data?.length > 0;
+
+	const quantityIndicatorText = hasContent
+		? `${data?.length} lista${data?.length > 1 ? "s" : ""}`
+		: "Sem listas no momento";
+
 	return {
 		data,
+		hasContent,
 		indicatorText: quantityIndicatorText,
 		onCreateList,
 		onPressListCard,

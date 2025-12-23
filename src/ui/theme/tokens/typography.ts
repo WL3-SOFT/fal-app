@@ -1,6 +1,6 @@
 export const typography = {
 	fontFamily: {
-		primary: "Inter-Regular",
+		primary: "Inter",
 	},
 	fontSize: {
 		// Micro (2-4px) - Decorative use only
@@ -78,6 +78,9 @@ export const typography = {
 	},
 
 	fontWeight: {
+		thin: "100",
+		extraLight: "200",
+		light: "300",
 		regular: "400",
 		medium: "500",
 		semiBold: "600",

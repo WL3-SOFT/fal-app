@@ -26,6 +26,11 @@ interface Colors {
 
 	highlightPrice: string;
 
+	fallback: {
+		text: string;
+		icon: string;
+	};
+
 	tab: {
 		active: {
 			icon: string;

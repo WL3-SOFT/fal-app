@@ -1,8 +1,9 @@
 import { useMemo } from "react";
-import { Button, View } from "react-native";
+import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@/ui/hooks";
 import { Avatar } from "../../Avatar";
+import { TextButton } from "../../Buttons";
 import { Logo } from "../../Logo";
 import { createHeaderStyles } from "./PrincipalHeader.styles";
 import type { HeaderProps } from "./PrincipalHeader.types";
@@ -34,9 +35,11 @@ export const PrincipalHeader = (props: HeaderProps) => {
 		<View style={styles.container}>
 			{shouldShowLogo && <Logo />}
 			{shouldShowBackButton && (
-				<Button
+				<TextButton
 					title={backButtonLabel}
-					onPress={backButtonCallback}></Button>
+					onPress={backButtonCallback}
+					variant="text"
+				/>
 			)}
 			<Avatar />
 		</View>

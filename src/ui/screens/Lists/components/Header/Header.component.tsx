@@ -6,7 +6,11 @@ import { useTheme } from "@/ui/hooks";
 import { createMyListHeaderStyles } from "./Header.styles";
 import type { MyListsHeaderProps } from "./Header.types";
 
-export const Header = ({ indicatorText, onCreateList }: MyListsHeaderProps) => {
+export const Header = ({
+	indicatorText,
+	onCreateList,
+	shouldHighlightAddButton = false,
+}: MyListsHeaderProps) => {
 	useRouter();
 	const { theme } = useTheme();
 	const style = createMyListHeaderStyles(theme);
@@ -25,7 +29,11 @@ export const Header = ({ indicatorText, onCreateList }: MyListsHeaderProps) => {
 						icon={
 							<PlusBox
 								type="outline"
-								color={theme.colors.neutralButton.default}
+								color={
+									shouldHighlightAddButton
+										? theme.colors.primary
+										: theme.colors.neutralButton.default
+								}
 							/>
 						}
 					/>
@@ -34,7 +42,7 @@ export const Header = ({ indicatorText, onCreateList }: MyListsHeaderProps) => {
 					<Head
 						id="list-count"
 						title={indicatorText}
-						type="h4"
+						type="h5"
 						color={theme.colors.subtitle}
 					/>
 				</View>

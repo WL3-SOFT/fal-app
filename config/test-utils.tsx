@@ -2,7 +2,7 @@ import {
 	type RenderOptions,
 	render,
 	userEvent,
-// biome-ignore lint/correctness/noUndeclaredDependencies: Depedência de testes unitários
+	// biome-ignore lint/correctness/noUndeclaredDependencies: Depedência de testes unitários
 } from "@testing-library/react-native";
 import type { ReactElement, ReactNode } from "react";
 import { ThemeProvider } from "@/ui/providers/ThemeProvider";

@@ -11,5 +11,6 @@
 		"source.organizeImports.biome": "explicit",
 		"source.sort.json": "explicit",
 		"source.sortMembers": "explicit"
-	}
+	},
+	"conventionalCommits.scopes": ["config"]
 }

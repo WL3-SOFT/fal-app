@@ -6,8 +6,12 @@ import { StrictMode, useEffect } from "react";
 import { Appearance } from "react-native";
 import { storage } from "@/infra/modules";
 import { AppProviders } from "@/ui/providers";
+import { DbConnection } from "../../config/db-connection";
 
 const isProduction = process.env.NODE_ENV === "production";
+
+const db = new DbConnection();
+db.connect();
 
 Sentry.init({
 	dsn: process.env["EXPO_PUBLIC_SENTRY_DSN"],

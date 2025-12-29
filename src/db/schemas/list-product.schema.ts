@@ -12,31 +12,19 @@ import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
  * - listId → lists.id (FK)
  * - productId → products.id (FK)
  *
- * Eventos relacionados:
- * - v1.list.product.added
- * - v1.list.product.removed
- * - v1.list.product.updated
- * - v1.list.product.marked.as.purchased
  */
 export const listProductsTable = sqliteTable("list_products", {
-	// Primary Key - UUID
 	id: text("id").primaryKey(),
-
-	// Foreign Keys
-	listId: text("listId").notNull(), // FK para lists.id
-	productId: text("productId").notNull(), // FK para products.id
-
-	// Informações específicas da lista
-	quantity: real("quantity").notNull(), // Quantidade do produto nesta lista
+	listId: text("listId").notNull(),
+	productId: text("productId").notNull(),
+	quantity: real("quantity").notNull(),
 	isPurchased: integer("isPurchased", { mode: "boolean" })
 		.notNull()
 		.default(false),
-
-	// Timestamps
 	addedAt: integer("addedAt", { mode: "timestamp_ms" })
 		.notNull()
-		.default(sql`(strftime('%s', 'now') * 1000)`), // Quando foi adicionado
-	purchasedAt: integer("purchasedAt", { mode: "timestamp_ms" }), // Quando foi marcado como comprado
+		.default(sql`(strftime('%s', 'now') * 1000)`),
+	purchasedAt: integer("purchasedAt", { mode: "timestamp_ms" }),
 	updatedAt: integer("updatedAt", { mode: "timestamp_ms" }),
-	removedAt: integer("removedAt", { mode: "timestamp_ms" }), // Soft delete
+	removedAt: integer("removedAt", { mode: "timestamp_ms" }),
 });

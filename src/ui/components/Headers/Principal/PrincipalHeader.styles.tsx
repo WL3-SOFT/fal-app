@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import type { EdgeInsets } from "react-native-safe-area-context";
-import type { Theme } from "@/ui/theme";
+import type { Theme } from "@/ui/themes";
 
 export const createHeaderStyles = (theme: Theme, insets: EdgeInsets) =>
 	StyleSheet.create({

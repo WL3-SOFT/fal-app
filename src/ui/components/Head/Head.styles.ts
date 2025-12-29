@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import type { Theme } from "@/ui/theme";
+import type { Theme } from "@/ui/themes";
 
 export const createHeadStyles = (theme: Theme, color?: string) => {
 	return StyleSheet.create({

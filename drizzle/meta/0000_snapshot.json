@@ -1,7 +1,7 @@
 {
 	"version": "6",
 	"dialect": "sqlite",
-	"id": "17d93255-5064-46b3-87d3-821bb72333cd",
+	"id": "196fb0f0-75ab-4cc0-adff-6e669cfa9d12",
 	"prevId": "00000000-0000-0000-0000-000000000000",
 	"tables": {
 		"accounts": {
@@ -69,22 +69,22 @@
 				},
 				"createdAt": {
 					"name": "createdAt",
-					"type": "text",
+					"type": "integer",
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "(CURRENT_TIMESTAMP)"
+					"default": "(strftime('%s', 'now') * 1000)"
 				},
 				"updatedAt": {
 					"name": "updatedAt",
-					"type": "text",
+					"type": "integer",
 					"primaryKey": false,
 					"notNull": false,
 					"autoincrement": false
 				},
 				"deletedAt": {
 					"name": "deletedAt",
-					"type": "text",
+					"type": "integer",
 					"primaryKey": false,
 					"notNull": false,
 					"autoincrement": false
@@ -148,29 +148,29 @@
 				},
 				"addedAt": {
 					"name": "addedAt",
-					"type": "text",
+					"type": "integer",
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "(CURRENT_TIMESTAMP)"
+					"default": "(strftime('%s', 'now') * 1000)"
 				},
 				"purchasedAt": {
 					"name": "purchasedAt",
-					"type": "text",
+					"type": "integer",
 					"primaryKey": false,
 					"notNull": false,
 					"autoincrement": false
 				},
 				"updatedAt": {
 					"name": "updatedAt",
-					"type": "text",
+					"type": "integer",
 					"primaryKey": false,
 					"notNull": false,
 					"autoincrement": false
 				},
 				"removedAt": {
 					"name": "removedAt",
-					"type": "text",
+					"type": "integer",
 					"primaryKey": false,
 					"notNull": false,
 					"autoincrement": false
@@ -203,7 +203,7 @@
 					"name": "description",
 					"type": "text",
 					"primaryKey": false,
-					"notNull": true,
+					"notNull": false,
 					"autoincrement": false
 				},
 				"usedTimes": {
@@ -247,22 +247,22 @@
 				},
 				"createdAt": {
 					"name": "createdAt",
-					"type": "text",
+					"type": "integer",
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "(CURRENT_TIMESTAMP)"
+					"default": "(strftime('%s', 'now') * 1000)"
 				},
 				"updatedAt": {
 					"name": "updatedAt",
-					"type": "text",
+					"type": "integer",
 					"primaryKey": false,
 					"notNull": false,
 					"autoincrement": false
 				},
 				"deletedAt": {
 					"name": "deletedAt",
-					"type": "text",
+					"type": "integer",
 					"primaryKey": false,
 					"notNull": false,
 					"autoincrement": false
@@ -314,29 +314,29 @@
 				},
 				"observedAt": {
 					"name": "observedAt",
-					"type": "text",
+					"type": "integer",
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false
 				},
 				"createdAt": {
 					"name": "createdAt",
-					"type": "text",
+					"type": "integer",
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "(CURRENT_TIMESTAMP)"
+					"default": "(strftime('%s', 'now') * 1000)"
 				},
 				"updatedAt": {
 					"name": "updatedAt",
-					"type": "text",
+					"type": "integer",
 					"primaryKey": false,
 					"notNull": false,
 					"autoincrement": false
 				},
 				"deletedAt": {
 					"name": "deletedAt",
-					"type": "text",
+					"type": "integer",
 					"primaryKey": false,
 					"notNull": false,
 					"autoincrement": false
@@ -375,22 +375,22 @@
 				},
 				"createdAt": {
 					"name": "createdAt",
-					"type": "text",
+					"type": "integer",
 					"primaryKey": false,
 					"notNull": true,
 					"autoincrement": false,
-					"default": "(CURRENT_TIMESTAMP)"
+					"default": "(strftime('%s', 'now') * 1000)"
 				},
 				"updatedAt": {
 					"name": "updatedAt",
-					"type": "text",
+					"type": "integer",
 					"primaryKey": false,
 					"notNull": false,
 					"autoincrement": false
 				},
 				"deletedAt": {
 					"name": "deletedAt",
-					"type": "text",
+					"type": "integer",
 					"primaryKey": false,
 					"notNull": false,
 					"autoincrement": false

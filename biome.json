@@ -61,7 +61,12 @@
 			},
 			"nursery": {
 				"noImportCycles": "error",
-				"noSecrets": "error",
+				"noSecrets": {
+					"level": "error",
+					"options": {
+						"entropyThreshold": 65
+					}
+				},
 				"noUnnecessaryConditions": "warn",
 				"noUnusedExpressions": "warn",
 				"useMaxParams": {

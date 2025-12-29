@@ -24,7 +24,7 @@ export const Header = ({
 						title="Minhas listas"
 					/>
 					<IconButton
-						id="create-list"
+						id="create-list-button"
 						onPress={onCreateList}
 						icon={
 							<PlusBox

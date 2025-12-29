@@ -13,31 +13,17 @@ import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
  * - Identificação do melhor preço
  * - Análise de tendências
  *
- * Eventos relacionados:
- * - v1.price.created
- * - v1.price.updated
- * - v1.price.deleted
  */
 export const pricesTable = sqliteTable("prices", {
-	// Primary Key - UUID
 	id: text("id").primaryKey(),
-
-	// Foreign Key
-	productId: text("productId").notNull(), // FK para products.id
-
-	// Informações de preço
-	value: real("value").notNull(), // Valor do preço
-
-	// Informações do estabelecimento
+	productId: text("productId").notNull(),
+	value: real("value").notNull(),
 	storeName: text("storeName").notNull(),
-	// biome-ignore lint/nursery/noSecrets: False positive - this is a location field, not a secret
 	storeLocation: text("storeLocation"),
-
-	// Timestamps
-	observedAt: integer("observedAt", { mode: "timestamp_ms" }).notNull(), // Quando o preço foi observado
+	observedAt: integer("observedAt", { mode: "timestamp_ms" }).notNull(),
 	createdAt: integer("createdAt", { mode: "timestamp_ms" })
 		.notNull()
 		.default(sql`(strftime('%s', 'now') * 1000)`),
 	updatedAt: integer("updatedAt", { mode: "timestamp_ms" }),
-	deletedAt: integer("deletedAt", { mode: "timestamp_ms" }), // Soft delete
+	deletedAt: integer("deletedAt", { mode: "timestamp_ms" }),
 });

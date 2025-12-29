@@ -40,7 +40,7 @@ export class List implements ListInterface {
 		this.createdAt = createdAt ? new Date(createdAt) : new Date();
 		this.updatedAt = updatedAt ? new Date(updatedAt) : null;
 		this.deletedAt = deletedAt ? new Date(deletedAt) : null;
-		this.createdBy = createdBy || "1";
+		this.createdBy = createdBy || "24";
 		this.updatedBy = updatedBy || null;
 		this.deletedBy = deletedBy || null;
 	}

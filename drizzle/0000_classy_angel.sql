@@ -7,9 +7,9 @@ CREATE TABLE `accounts` (
 	`systemRole` text DEFAULT 'user' NOT NULL,
 	`isActive` integer DEFAULT true NOT NULL,
 	`isBanned` integer DEFAULT false NOT NULL,
-	`createdAt` text DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
-	`updatedAt` text,
-	`deletedAt` text
+	`createdAt` integer DEFAULT (strftime('%s', 'now') * 1000) NOT NULL,
+	`updatedAt` integer,
+	`deletedAt` integer
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `accounts_email_unique` ON `accounts` (`email`);--> statement-breakpoint
@@ -20,24 +20,24 @@ CREATE TABLE `list_products` (
 	`productId` text NOT NULL,
 	`quantity` real NOT NULL,
 	`isPurchased` integer DEFAULT false NOT NULL,
-	`addedAt` text DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
-	`purchasedAt` text,
-	`updatedAt` text,
-	`removedAt` text
+	`addedAt` integer DEFAULT (strftime('%s', 'now') * 1000) NOT NULL,
+	`purchasedAt` integer,
+	`updatedAt` integer,
+	`removedAt` integer
 );
 --> statement-breakpoint
 CREATE TABLE `lists` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text NOT NULL,
-	`description` text NOT NULL,
+	`description` text,
 	`usedTimes` integer DEFAULT 0 NOT NULL,
 	`isActive` integer DEFAULT true NOT NULL,
 	`isPublic` integer DEFAULT false NOT NULL,
 	`canBeShared` integer DEFAULT false NOT NULL,
 	`createdBy` text NOT NULL,
-	`createdAt` text DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
-	`updatedAt` text,
-	`deletedAt` text
+	`createdAt` integer DEFAULT (strftime('%s', 'now') * 1000) NOT NULL,
+	`updatedAt` integer,
+	`deletedAt` integer
 );
 --> statement-breakpoint
 CREATE TABLE `prices` (
@@ -46,17 +46,17 @@ CREATE TABLE `prices` (
 	`value` real NOT NULL,
 	`storeName` text NOT NULL,
 	`storeLocation` text,
-	`observedAt` text NOT NULL,
-	`createdAt` text DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
-	`updatedAt` text,
-	`deletedAt` text
+	`observedAt` integer NOT NULL,
+	`createdAt` integer DEFAULT (strftime('%s', 'now') * 1000) NOT NULL,
+	`updatedAt` integer,
+	`deletedAt` integer
 );
 --> statement-breakpoint
 CREATE TABLE `products` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text NOT NULL,
 	`unit` text DEFAULT 'un' NOT NULL,
-	`createdAt` text DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
-	`updatedAt` text,
-	`deletedAt` text
+	`createdAt` integer DEFAULT (strftime('%s', 'now') * 1000) NOT NULL,
+	`updatedAt` integer,
+	`deletedAt` integer
 );

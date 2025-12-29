@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import type { Theme } from "@/ui/theme";
+import type { Theme } from "@/ui/themes";
 
 export const createMyListsStyles = (theme: Theme, hasContent: boolean) =>
 	StyleSheet.create({

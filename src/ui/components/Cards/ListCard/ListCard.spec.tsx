@@ -24,7 +24,7 @@ describe("List Card - Component Test - Suite", () => {
 		const itemsQuantity = component.getByTestId(
 			"list-card-items-quantity-text",
 		);
-		const quantityText = `${data.itemsQuantity} itens`;
+		const quantityText = `${data.itemsQuantity} items`;
 
 		expect(itemsQuantity).toBeVisible();
 		expect(itemsQuantity).toHaveTextContent(quantityText);

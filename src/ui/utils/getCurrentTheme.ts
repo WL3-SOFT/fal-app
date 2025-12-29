@@ -1,5 +1,5 @@
 import { Appearance } from "react-native";
-import { darkTheme, lightTheme } from "@/ui/theme";
+import { darkTheme, lightTheme } from "@/ui/themes";
 
 export const getCurrentTheme = () => {
 	const colorScheme = Appearance.getColorScheme();

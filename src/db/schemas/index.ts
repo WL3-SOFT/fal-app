@@ -1,15 +1,3 @@
-/**
- * Database Schemas - Drizzle ORM
- *
- * Este arquivo centraliza todos os schemas do banco de dados e define
- * os relacionamentos entre as tabelas.
- *
- * Arquitetura: Clean Architecture + Event Sourcing Pattern
- * - Soft Delete em todas as tabelas (deletedAt)
- * - UUIDs como Primary Keys
- * - Timestamps completos (createdAt, updatedAt, deletedAt)
- */
-
 import { relations } from "drizzle-orm";
 import { accountsTable } from "./account.schema";
 import { listsTable } from "./list.schema";
@@ -79,10 +67,6 @@ export const pricesRelations = relations(pricesTable, ({ one }) => ({
 	}),
 }));
 
-// ============================================================================
-// EXPORTS
-// ============================================================================
-
 export {
 	accountsTable,
 	listsTable,
@@ -91,9 +75,6 @@ export {
 	productsTable,
 };
 
-/**
- * Schema completo para uso no Drizzle ORM
- */
 export const schema = {
 	// Tables
 	accountsTable,

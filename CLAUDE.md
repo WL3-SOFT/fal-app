@@ -47,13 +47,24 @@ This project follows **Clean Architecture** with **MVVM** pattern and **Dependen
 ```
 src/
 ├── app/              # Expo Router - File-based routing
-├── core/             # Contracts, interfaces, and constraints
+├── core/             # Domain Layer - Business rules and contracts
+│   ├── entities/     # Domain entities (business objects)
+│   ├── useCases/     # Application business logic
 │   ├── constraints/  # Business constraints/constants
-│   └── interfaces/   # Interface definitions (HttpClient, StorageClient, etc.)
-├── infra/            # Infrastructure implementations
-│   └── modules/      # Concrete implementations (http, storage)
+│   └── interfaces/   # Contracts for external dependencies
+│       ├── modules/      # Infrastructure interfaces (HttpClient, StorageClient)
+│       └── repositories/ # Data access interfaces (IListsRepository)
+├── data/             # Data Layer - Repository implementations
+│   └── repositories/ # Concrete repository implementations (ListsRepository)
+├── db/               # Database Infrastructure
+│   ├── schemas/      # Drizzle ORM table schemas
+│   ├── migrations/   # Database migrations
+│   ├── client.ts     # Database connection client
+│   └── utils/        # Database utilities (uuid, soft-delete)
+├── infra/            # Infrastructure Layer - External adapters
+│   └── modules/      # Concrete implementations (http, storage, auth)
 ├── types/            # Shared TypeScript type definitions
-└── ui/               # UI layer (MVVM)
+└── ui/               # Presentation Layer (MVVM)
     ├── assets/       # Images, fonts, icons
     ├── components/   # Reusable UI components
     ├── hooks/        # Custom React hooks
@@ -68,6 +79,50 @@ src/
 1. **Business logic isolation**: Domain layer has NO external dependencies
 2. **MVVM in UI**: Each screen has a View + ViewModel pattern
 3. **Dependency Inversion**: Never import libraries directly in business logic - use adapters in `infra/` that implement interfaces from `core/interfaces/`
+4. **Repository Pattern**: Data access is abstracted through interfaces in `core/interfaces/repositories/`, implemented in `data/repositories/`
+
+### Repository Pattern
+
+**What is a Repository?**
+
+A Repository abstracts data access with two parts:
+- **Interface** (`core/interfaces/repositories/`) - Defines WHAT operations exist (create, find, update, delete)
+- **Implementation** (`data/repositories/`) - Defines HOW operations work (using Drizzle, Prisma, REST API, etc.)
+
+**Example:**
+```typescript
+// 1. Interface (core/interfaces/repositories/IListsRepository.ts)
+export interface IListsRepository {
+  create(data: CreateListDTO): Promise<List>;
+  findById(id: string): Promise<List | null>;
+}
+
+// 2. Implementation (data/repositories/ListsRepository.ts)
+export class ListsRepository implements IListsRepository {
+  async create(data: CreateListDTO): Promise<List> {
+    // Drizzle ORM implementation
+    return db.insert(listsTable).values(data);
+  }
+}
+
+// 3. Use Case (core/useCases/CreateList.ts)
+export class CreateListUseCase {
+  constructor(private repository: IListsRepository) {} // ← Interface, not class!
+
+  async execute(data: CreateListDTO) {
+    return this.repository.create(data);
+  }
+}
+
+// 4. Dependency Injection (ui/screens/Lists/Lists.viewModel.ts)
+const repository = new ListsRepository(); // Concrete implementation
+const useCase = new CreateListUseCase(repository); // Inject
+```
+
+**Benefits:**
+- Swap database (SQLite → PostgreSQL) without changing business logic
+- Easy testing (mock the interface)
+- Clear separation of concerns
 
 ### Screen Structure Pattern
 
@@ -84,9 +139,16 @@ src/ui/screens/FeatureName/
 
 **CRITICAL**: Never use external libraries directly in domain/business logic!
 
+**For Infrastructure (HTTP, Storage, Analytics, etc.):**
 1. Define interface in `src/core/interfaces/modules/`
 2. Create adapter in `src/infra/modules/` that implements the interface
-3. Inject the interface (not implementation) into use cases/repositories
+3. Inject the interface (not implementation) into use cases
+
+**For Data Access (Repositories):**
+1. Define interface in `src/core/interfaces/repositories/`
+2. Create implementation in `src/data/repositories/` that implements the interface
+3. Inject the interface (not implementation) into use cases
+4. Keep database-specific code (schemas, migrations) in `src/db/`
 
 ## TypeScript Configuration
 
@@ -174,15 +236,28 @@ Git hooks enforce conventional commit format via `git-conventional-commits`:
 
 This project is in **early development stage**:
 
-- Project structure and architecture defined
+- Project structure and architecture defined (Clean Architecture + MVVM)
 - Expo Router configured with typed routes
 - Firebase integration setup
 - Code quality tools configured (Biome + Lefthook)
 - Theme system foundation
-- Domain and Data layers (entities, use cases, repositories) - not yet implemented
-- Screen implementations - minimal
+- Database layer (Drizzle ORM + SQLite) configured
+- Data layer: Lists repository implemented (interface + Drizzle implementation)
+- Domain layer: List entity implemented
+- Use cases: 12 list use cases implemented with validation
+  - List operations: Create, GetById, GetUserLists, Update, Delete, IncrementUsage
+  - Product operations: Add, Remove, UpdateQuantity, MarkAsPurchased, GetListProducts, GetPendingProducts
+- View Models (MVVM): 4 view models implemented
+  - useListsViewModel - Listagem e gerenciamento de listas
+  - useCreateListViewModel - Formulário de criação com validação
+  - useListDetailsViewModel - Detalhes e edição de lista
+  - useListProductsViewModel - Gerenciamento de produtos com filtros e progresso
+- Screen implementations - minimal (views precisam integração com view models)
 
 ## Additional Documentation
 
 - Database schema: `docs/database-schema.md`
+- Repository pattern guide: `docs/repository-pattern.md`
+- Lists use cases: `src/core/useCases/lists/README.md`
+- Lists view models: `src/ui/screens/Lists/viewModels/README.md`
 - Social impact manifesto: `MANIFESTO.md`

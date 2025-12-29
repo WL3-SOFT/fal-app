@@ -1,10 +1,3 @@
-/**
- * UUID Generator
- *
- * Gera UUIDs v4 para usar como Primary Keys nas tabelas.
- * Conforme especificação do database-schema.md.
- */
-
 import { randomUUID } from "expo-crypto";
 
 /**

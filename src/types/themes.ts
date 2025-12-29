@@ -1,4 +1,4 @@
-import type { spacing, typography } from "../ui/theme/tokens";
+import type { spacing, typography } from "../ui/themes/tokens";
 
 interface Colors {
 	primary: string;

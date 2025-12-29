@@ -1,164 +1,144 @@
-/**
- * Lists ViewModel - Implementação com Zustand
- *
- * Conecta a View com o Zustand Store, mantendo compatibilidade com a interface existente.
- */
-
 import { useRouter } from "expo-router";
-import type { ListCardProps } from "@/ui/components/Cards/ListCard/ListCard.types";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { DEFAULT_USER_ID } from "@/core/constraints";
+import type { CreateListDto } from "@/core/interfaces/repositories/IListsRepository";
+import {
+	CreateListUseCase,
+	DeleteListUseCase,
+	GetUserListsUseCase,
+} from "@/core/useCases";
+import { listsRepository } from "@/data/repositories";
+import type { ListsState } from "./List.types";
 
-// TODO: Descomentar quando integrar com autenticação
-// import { useEffect } from "react";
-// import {
-// 	useActiveLists,
-// 	useListsActions,
-// 	useListsLoading,
-// 	useListsStore,
-// } from "@/stores/lists.store";
-
-/**
- * Hook do ViewModel para a tela de Listas
- *
- * TODO: Substituir dados mockados por dados reais quando userId estiver disponível
- * TODO: Integrar com autenticação para pegar userId do usuário logado
- */
-export const useListsPage = () => {
+export const useListsViewModel = () => {
 	const router = useRouter();
 
-	// ========================================================================
-	// ZUSTAND STORE (comentado até ter autenticação)
-	// ========================================================================
+	const [state, setState] = useState<ListsState>({
+		lists: [],
+		loading: false,
+		error: null,
+		creating: false,
+		deleting: false,
+	});
 
-	// const lists = useActiveLists();
-	// const loadingState = useListsLoading();
-	// const actions = useListsActions();
+	const getUserListsUseCase = useMemo(
+		() => new GetUserListsUseCase(listsRepository),
+		[],
+	);
+	const createListUseCase = useMemo(
+		() => new CreateListUseCase(listsRepository),
+		[],
+	);
+	const deleteListUseCase = useMemo(
+		() => new DeleteListUseCase(listsRepository),
+		[],
+	);
 
-	// useEffect(() => {
-	// 	// TODO: Pegar userId da autenticação
-	// 	// const { userId } = useAuth();
-	// 	// actions.loadLists(userId);
-	// }, []);
+	const loadLists = useCallback(
+		async (userId: string = DEFAULT_USER_ID) => {
+			setState((prev) => ({ ...prev, loading: true, error: null }));
 
-	// ========================================================================
-	// DADOS MOCKADOS (TEMPORÁRIO)
-	// ========================================================================
+			try {
+				const lists = await getUserListsUseCase.execute(userId);
+				setState((prev) => ({ ...prev, lists, loading: false }));
+			} catch (error) {
+				const errorMessage =
+					error instanceof Error ? error.message : "Erro ao carregar listas";
+				setState((prev) => ({ ...prev, error: errorMessage, loading: false }));
+			}
+		},
+		[getUserListsUseCase],
+	);
 
-	// TODO: Remover quando integrar com Zustand store
-	const data: ListCardProps[] = [
-		{
-			id: "1",
-			itemsQuantity: 107,
-			lastUsed: new Date(),
-			lowestPrice: 684.21,
-			title: "Lista de compras mensal",
-		},
-		{
-			id: "2",
-			itemsQuantity: 107,
-			lastUsed: new Date(),
-			lowestPrice: 684.21,
-			title: "Lista de compras mensal",
-		},
-		{
-			id: "3",
-			itemsQuantity: 107,
-			lastUsed: new Date(),
-			lowestPrice: 684.21,
-			title: "Lista de compras mensal",
-		},
-		{
-			id: "4",
-			itemsQuantity: 107,
-			lastUsed: new Date(),
-			lowestPrice: 684.21,
-			title: "Lista de compras mensal",
-		},
-		{
-			id: "5",
-			itemsQuantity: 107,
-			lastUsed: new Date(),
-			lowestPrice: 684.21,
-			title: "Lista de compras mensal",
-		},
-		{
-			id: "6",
-			itemsQuantity: 107,
-			lastUsed: new Date(),
-			lowestPrice: 684.21,
-			title: "Lista de compras mensal",
-		},
-		{
-			id: "7",
-			itemsQuantity: 107,
-			lastUsed: new Date(),
-			lowestPrice: 684.21,
-			title: "Lista de compras mensal",
-		},
-		{
-			id: "8",
-			itemsQuantity: 107,
-			lastUsed: new Date(),
-			lowestPrice: 684.21,
-			title: "Lista de compras mensal",
-		},
-	];
+	const createList = useCallback(
+		async (data: Omit<CreateListDto, "createdBy">) => {
+			setState((prev) => ({ ...prev, creating: true, error: null }));
 
-	// ========================================================================
-	// TRANSFORMAÇÃO DE DADOS
-	// ========================================================================
+			try {
+				await createListUseCase.execute({
+					...data,
+					createdBy: DEFAULT_USER_ID,
+				});
 
-	// Quando integrar com Zustand, transformar ListItem[] em ListCardProps[]
-	// const data: ListCardProps[] = lists.map(list => ({
-	//   id: list.id,
-	//   title: list.name,
-	//   itemsQuantity: list.productCount,
-	//   lastUsed: new Date(list.updatedAt || list.createdAt),
-	//   lowestPrice: 0, // TODO: Calcular menor preço dos produtos
-	// }));
+				await loadLists(DEFAULT_USER_ID);
 
-	// ========================================================================
-	// ACTIONS
-	// ========================================================================
+				setState((prev) => ({ ...prev, creating: false }));
+				console.log("chegou aqui - create");
 
-	const onCreateList = () => {
+				return true;
+			} catch (error) {
+				const errorMessage =
+					error instanceof Error ? error.message : "Erro ao criar lista";
+				setState((prev) => ({
+					...prev,
+					error: errorMessage,
+					creating: false,
+				}));
+				return false;
+			}
+		},
+		[loadLists, createListUseCase],
+	);
+
+	const deleteList = useCallback(
+		async (listId: string) => {
+			setState((prev) => ({ ...prev, deleting: true, error: null }));
+
+			try {
+				await deleteListUseCase.execute(listId);
+
+				await loadLists(DEFAULT_USER_ID);
+
+				setState((prev) => ({ ...prev, deleting: false }));
+
+				return true;
+			} catch (error) {
+				const errorMessage =
+					error instanceof Error ? error.message : "Erro ao deletar lista";
+				setState((prev) => ({ ...prev, error: errorMessage, deleting: false }));
+				return false;
+			}
+		},
+		[loadLists, deleteListUseCase],
+	);
+
+	const navigateToCreate = useCallback(() => {
 		router.push("/lists/create");
-	};
+	}, [router]);
 
-	const onPressListCard = (id: string) => {
-		router.push(`/lists/${id}`);
-	};
+	const navigateToDetails = useCallback(
+		(listId: string) => {
+			router.push(`/lists/${listId}`);
+		},
+		[router],
+	);
 
-	// ========================================================================
-	// COMPUTED VALUES
-	// ========================================================================
+	const clearError = useCallback(() => {
+		setState((prev) => ({ ...prev, error: null }));
+	}, []);
 
-	const hasContent = data?.length > 0;
+	useEffect(() => {
+		loadLists(DEFAULT_USER_ID);
+	}, [loadLists]);
 
-	const quantityIndicatorText = hasContent
-		? `${data?.length} lista${data?.length > 1 ? "s" : ""}`
+	const hasContent = Boolean(state?.lists && state.lists?.length > 0);
+	const quantityText = hasContent
+		? `${state?.lists?.length} lista${state?.lists && state?.lists?.length > 1 ? "s" : ""}`
 		: "Sem listas no momento";
 
-	// ========================================================================
-	// RETURN
-	// ========================================================================
-
 	return {
-		data,
+		lists: state.lists,
+		loading: state.loading,
+		error: state.error,
+		creating: state.creating,
+		deleting: state.deleting,
 		hasContent,
-		indicatorText: quantityIndicatorText,
-		onCreateList,
-		onPressListCard,
+		quantityText,
+		loadLists,
+		createList,
+		deleteList,
+		navigateToCreate,
+		navigateToDetails,
+		clearError,
 	};
 };
-
-/**
- * PRÓXIMOS PASSOS PARA INTEGRAÇÃO COMPLETA:
- *
- * 1. Implementar autenticação e obter userId
- * 2. Descomentar código do Zustand store
- * 3. Remover dados mockados
- * 4. Implementar transformação ListItem → ListCardProps
- * 5. Implementar cálculo de menor preço (lowestPrice)
- * 6. Adicionar loading states na View
- * 7. Adicionar error handling
- */

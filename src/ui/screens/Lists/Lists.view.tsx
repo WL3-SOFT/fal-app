@@ -4,31 +4,39 @@ import { ListCard } from "@/ui/components";
 import { useTheme } from "@/ui/hooks";
 import { Header, NoList } from "./components";
 import { createMyListsStyles } from "./Lists.styles";
-import { useListsPage } from "./Lists.viewModel";
+import { useListsViewModel } from "./Lists.viewModel";
 
 export const ListsView = () => {
 	const { theme } = useTheme();
 
-	const { data, indicatorText, onPressListCard, onCreateList, hasContent } =
-		useListsPage();
+	const {
+		lists,
+		hasContent,
+		navigateToDetails,
+		quantityText,
+		navigateToCreate,
+	} = useListsViewModel();
 	const styles = createMyListsStyles(theme, hasContent);
 
 	return (
 		<SafeAreaView>
 			<FlatList
 				contentContainerStyle={styles.container}
-				data={data}
+				data={lists}
 				renderItem={({ item }) => (
 					<ListCard
-						{...item}
-						onPress={() => onPressListCard(item.id)}
+						id={item.id}
+						title={item.name}
+						itemsQuantity={item.productCount}
+						lowestPrice={item.usedTimes}
+						onPress={() => navigateToDetails(item.id)}
 					/>
 				)}
 				keyExtractor={(item) => item.id}
 				ListHeaderComponent={
 					<Header
-						indicatorText={indicatorText}
-						onCreateList={onCreateList}
+						indicatorText={quantityText}
+						onCreateList={navigateToCreate}
 						shouldHighlightAddButton={!hasContent}
 					/>
 				}

@@ -1,11 +1,4 @@
-/**
- * Soft Delete Utilities
- *
- * Helpers para implementar o padrão de Soft Delete em todas as queries.
- * Registros deletados têm deletedAt != NULL.
- */
-
-import { isNull } from "drizzle-orm";
+import { isNull, type SQLWrapper } from "drizzle-orm";
 
 /**
  * Condição padrão para filtrar registros não deletados
@@ -19,7 +12,9 @@ import { isNull } from "drizzle-orm";
  * });
  * ```
  */
-export const onlyActive = <T>(deletedAtField: T) => isNull(deletedAtField);
+export const onlyActive = <T>(
+	deletedAtField: T extends SQLWrapper ? T : never,
+) => isNull(deletedAtField);
 
 /**
  * Marca um registro como deletado (soft delete)

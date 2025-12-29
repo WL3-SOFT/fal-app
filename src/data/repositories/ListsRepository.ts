@@ -1,76 +1,21 @@
-/**
- * Lists Repository - Implementação Drizzle ORM
- *
- * Gerencia operações CRUD de listas seguindo Clean Architecture.
- * Implementa soft delete e queries otimizadas.
- *
- * Padrões implementados:
- * - Soft Delete (deletedAt IS NULL)
- * - Event Sourcing (eventos implícitos via Drizzle)
- * - Type Safety (TypeScript strict mode)
- * - Dependency Inversion (retorna tipos do domínio, não do DB)
- */
-
 import { and, count, desc, eq, isNull, sql } from "drizzle-orm";
-import { db } from "../client";
-import { listProductsTable, listsTable, productsTable } from "../schemas";
-import { markAsDeleted, markAsUpdated } from "../utils/soft-delete";
-import { generateUuid } from "../utils/uuid";
+import { List } from "#core/entities";
+import type {
+	CreateListDto,
+	ListProductWithDetails,
+	ListsRepositoryInterface,
+	ListWithProductCount,
+	UpdateListDto,
+} from "#core/interfaces/repositories/IListsRepository";
+import { db } from "#db/client";
+import { listProductsTable, listsTable, productsTable } from "#db/schemas";
+import { markAsDeleted, markAsUpdated } from "#db/utils/soft-delete";
+import { generateUuid } from "#db/utils/uuid";
 
-// ============================================================================
-// TYPES
-// ============================================================================
-
-/**
- * Tipo inferido da tabela lists (para INSERTs)
- */
 type NewList = typeof listsTable.$inferInsert;
 
-/**
- * Tipo inferido da tabela lists (para SELECTs)
- */
-type List = typeof listsTable.$inferSelect;
-
-/**
- * Lista com contagem de produtos
- */
-type ListWithProductCount = List & {
-	productCount: number;
-};
-
-/**
- * Produto na lista com informações completas
- */
-type ListProductWithDetails = {
-	id: string;
-	quantity: number;
-	isPurchased: boolean;
-	addedAt: Date;
-	product: {
-		id: string;
-		name: string;
-		unit: string;
-	};
-};
-
-// ============================================================================
-// REPOSITORY
-// ============================================================================
-
-export class ListsRepository {
-	/**
-	 * Cria uma nova lista
-	 *
-	 * Gera UUID automaticamente e define valores padrão.
-	 * Evento implícito: v1.list.created
-	 */
-	async create(data: {
-		name: string;
-		description: string;
-		createdBy: string;
-		isPublic?: boolean;
-		canBeShared?: boolean;
-	}): Promise<List> {
+export class ListsRepository implements ListsRepositoryInterface {
+	async create(data: CreateListDto): Promise<List> {
 		const newList: NewList = {
 			id: generateUuid(),
 			name: data.name,
@@ -84,15 +29,10 @@ export class ListsRepository {
 
 		await db.insert(listsTable).values(newList);
 
-		return newList as List;
+		// Return a proper List entity instance, not a plain object
+		return new List(newList);
 	}
 
-	/**
-	 * Busca listas ativas de um usuário
-	 *
-	 * Retorna apenas listas não deletadas, ordenadas por data de criação.
-	 * Inclui contagem de produtos em cada lista.
-	 */
 	async findByUser(userId: string): Promise<ListWithProductCount[]> {
 		const result = await db
 			.select({
@@ -130,28 +70,20 @@ export class ListsRepository {
 		return result as ListWithProductCount[];
 	}
 
-	/**
-	 * Busca lista por ID
-	 *
-	 * Retorna null se a lista não existir ou estiver deletada.
-	 */
 	async findById(listId: string): Promise<List | null> {
 		const result = await db.query.listsTable.findFirst({
 			where: and(eq(listsTable.id, listId), isNull(listsTable.deletedAt)),
 		});
 
-		return result ?? null;
+		if (!result) {
+			return null;
+		}
+
+		// Return a proper List entity instance
+		return new List(result);
 	}
 
-	/**
-	 * Atualiza uma lista
-	 *
-	 * Evento implícito: v1.list.updated
-	 */
-	async update(
-		listId: string,
-		data: Partial<Pick<List, "name" | "description" | "isActive">>,
-	): Promise<void> {
+	async update(listId: string, data: UpdateListDto): Promise<void> {
 		await db
 			.update(listsTable)
 			.set({
@@ -161,12 +93,6 @@ export class ListsRepository {
 			.where(eq(listsTable.id, listId));
 	}
 
-	/**
-	 * Deleta uma lista (soft delete)
-	 *
-	 * Marca deletedAt com timestamp atual.
-	 * Evento implícito: v1.list.deleted
-	 */
 	async delete(listId: string): Promise<void> {
 		await db
 			.update(listsTable)
@@ -177,11 +103,6 @@ export class ListsRepository {
 			.where(eq(listsTable.id, listId));
 	}
 
-	/**
-	 * Incrementa contador de reutilizações
-	 *
-	 * Evento implícito: v1.list.used
-	 */
 	async incrementUsage(listId: string): Promise<void> {
 		await db
 			.update(listsTable)
@@ -192,11 +113,6 @@ export class ListsRepository {
 			.where(eq(listsTable.id, listId));
 	}
 
-	/**
-	 * Adiciona produto à lista
-	 *
-	 * Evento implícito: v1.list.product.added
-	 */
 	async addProduct(
 		listId: string,
 		productId: string,
@@ -211,11 +127,6 @@ export class ListsRepository {
 		});
 	}
 
-	/**
-	 * Remove produto da lista (soft delete)
-	 *
-	 * Evento implícito: v1.list.product.removed
-	 */
 	async removeProduct(listId: string, productId: string): Promise<void> {
 		await db
 			.update(listProductsTable)
@@ -231,11 +142,6 @@ export class ListsRepository {
 			);
 	}
 
-	/**
-	 * Atualiza quantidade de produto na lista
-	 *
-	 * Evento implícito: v1.list.product.updated
-	 */
 	async updateProductQuantity(
 		listId: string,
 		productId: string,
@@ -255,11 +161,6 @@ export class ListsRepository {
 			);
 	}
 
-	/**
-	 * Marca produto como comprado
-	 *
-	 * Evento implícito: v1.list.product.marked.as.purchased
-	 */
 	async markProductAsPurchased(
 		listId: string,
 		productId: string,
@@ -279,11 +180,6 @@ export class ListsRepository {
 			);
 	}
 
-	/**
-	 * Busca produtos de uma lista
-	 *
-	 * Retorna apenas produtos não removidos com informações completas.
-	 */
 	async getListProducts(listId: string): Promise<ListProductWithDetails[]> {
 		const result = await db
 			.select({
@@ -314,11 +210,6 @@ export class ListsRepository {
 		return result as ListProductWithDetails[];
 	}
 
-	/**
-	 * Busca produtos não comprados de uma lista
-	 *
-	 * Útil para exibir itens pendentes na lista de compras.
-	 */
 	async getPendingProducts(listId: string): Promise<ListProductWithDetails[]> {
 		const result = await db
 			.select({
@@ -351,9 +242,4 @@ export class ListsRepository {
 	}
 }
 
-/**
- * Instância singleton do repository
- *
- * Usar esta instância ao invés de criar novas.
- */
 export const listsRepository = new ListsRepository();

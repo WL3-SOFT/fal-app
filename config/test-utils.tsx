@@ -1,3 +1,5 @@
+// biome-ignore lint/correctness/noUndeclaredDependencies: Depedência de testes unitários
+import { faker } from "@faker-js/faker/locale/pt_BR";
 import {
 	type RenderOptions,
 	render,
@@ -5,7 +7,7 @@ import {
 	// biome-ignore lint/correctness/noUndeclaredDependencies: Depedência de testes unitários
 } from "@testing-library/react-native";
 import type { ReactElement, ReactNode } from "react";
-import { ThemeProvider } from "@/ui/providers/ThemeProvider";
+import { ThemeProvider } from "@/ui/providers";
 
 interface AllTheProvidersProps {
 	children: ReactNode;
@@ -27,4 +29,4 @@ function customRender(
 
 // biome-ignore lint/correctness/noUndeclaredDependencies: Depedência de testes unitários
 export * from "@testing-library/react-native";
-export { customRender as render };
+export { customRender as render, faker };

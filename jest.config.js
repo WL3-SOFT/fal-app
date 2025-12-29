@@ -56,12 +56,11 @@ const config = {
 		"<rootDir>/src/ui/theme/",
 		"<rootDir>/src/ui/providers/",
 	],
-	testMatch: ["**/*.spec.ts?(x)"],
+	testMatch: ["**/*.spec.ts?(x)", "**/*.integration.ts?(x)"],
 	testPathIgnorePatterns: ["/node_modules/", "\\.e2e\\.(ts|tsx)$"],
 	watchPathIgnorePatterns: ["node_modules"],
 	transformIgnorePatterns: [
-		// biome-ignore lint/nursery/noSecrets: Não se trata de uma secret
-		"node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg)",
+		"node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|@faker-js)",
 	],
 	moduleNameMapper: {
 		"^@/(.*)$": "<rootDir>/src/$1",
@@ -71,6 +70,12 @@ const config = {
 		"^@screens/(.*)$": "<rootDir>/src/ui/screens/$1",
 		"^@themes/(.*)$": "<rootDir>/src/ui/themes/$1",
 		"#test-utils$": "<rootDir>/config/test-utils.tsx",
+		"^#core/(.*)$": "<rootDir>/src/core/$1",
+		"^#data/(.*)$": "<rootDir>/src/data/$1",
+		"^#db/(.*)$": "<rootDir>/src/db/$1",
+		"^#infra/(.*)$": "<rootDir>/src/infra/$1",
+		"^#ui/(.*)$": "<rootDir>/src/ui/$1",
+		"^#utils/(.*)$": "<rootDir>/src/utils/$1",
 	},
 	fakeTimers: {
 		enableGlobally: true,

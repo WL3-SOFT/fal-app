@@ -42,7 +42,7 @@ export const ListCard = ({
 							/>
 						}
 						id="list-card-items-quantity"
-						text={`${itemsQuantity} itens`}
+						text={`${itemsQuantity} items`}
 					/>
 					{hasLastUsedInfo && (
 						<Legend

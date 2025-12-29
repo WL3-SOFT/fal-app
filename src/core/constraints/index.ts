@@ -28,3 +28,9 @@ export const menuOptions = [
 		image: require("@/ui/assets/images/eventos.png"),
 	},
 ];
+
+export const DEFAULT_USER_ID = "24";
+export const MINIMUM_LIST_NAME_LENGTH = 3;
+export const MAXIMUM_LIST_NAME_LENGTH = 100;
+export const MINIMUM_LIST_DESCRIPTION_LENGTH = 3;
+export const MAXIMUM_LIST_DESCRIPTION_LENGTH = 500;

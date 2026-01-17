@@ -1,11 +1,14 @@
 import * as Sentry from "@sentry/react-native";
+import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { isRunningInExpoGo } from "expo";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StrictMode, useEffect } from "react";
-import { Appearance } from "react-native";
+import { ActivityIndicator, Appearance, Text, View } from "react-native";
+import { db } from "@/db/client";
 import { storage } from "@/infra/modules";
 import { AppProviders } from "@/ui/providers";
+import migrations from "../../drizzle/migrations";
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -29,9 +32,7 @@ Sentry.init({
 	debug: false,
 	enableAutoSessionTracking: true,
 	enableCaptureFailedRequests: true,
-	// uncomment the line below to enable Spotlight (https://spotlightjs.com)
-	// biome-ignore lint/correctness/noUndeclaredVariables: __DEV__ é um valor válido do react native
-	spotlight: __DEV__,
+	spotlight: process.env.NODE_ENV === "development",
 	enabled: isProduction,
 });
 
@@ -52,6 +53,21 @@ const Application = () => (
 );
 
 function RootLayout() {
+	const { success, error } = useMigrations(db, migrations);
+
+	useEffect(() => {
+		if (error) {
+			console.error("❌ Erro na migração:", error);
+			Sentry.captureException(error, {
+				tags: { context: "database-migration" },
+			});
+		}
+
+		if (success) {
+			console.log("✅ Migrations concluídas com sucesso");
+		}
+	}, [success, error]);
+
 	useEffect(() => {
 		const setThemeMode = async () => {
 			const themeMode = await storage.get("themeMode");
@@ -61,6 +77,57 @@ function RootLayout() {
 		};
 		setThemeMode();
 	}, []);
+
+	if (error) {
+		return (
+			<View
+				style={{
+					flex: 1,
+					justifyContent: "center",
+					alignItems: "center",
+					padding: 20,
+					backgroundColor: "#fff",
+				}}>
+				<Text
+					style={{
+						fontSize: 18,
+						fontWeight: "bold",
+						color: "#ef4444",
+						marginBottom: 12,
+					}}>
+					Erro ao inicializar banco de dados
+				</Text>
+				<Text
+					style={{
+						fontSize: 14,
+						color: "#666",
+						textAlign: "center",
+					}}>
+					{error.message}
+				</Text>
+			</View>
+		);
+	}
+
+	if (!success) {
+		return (
+			<View
+				style={{
+					flex: 1,
+					justifyContent: "center",
+					alignItems: "center",
+					backgroundColor: "#fff",
+				}}>
+				<ActivityIndicator
+					size="large"
+					color="#3b82f6"
+				/>
+				<Text style={{ marginTop: 16, fontSize: 14, color: "#666" }}>
+					Inicializando banco de dados...
+				</Text>
+			</View>
+		);
+	}
 
 	return !isProduction ? (
 		<StrictMode>

@@ -1,8 +1,9 @@
 import { act } from "react";
-import { renderHook } from "#test-utils";
+import { renderHook, waitFor } from "#test-utils";
 import { CreateListUseCase } from "@/core/useCases";
 import { DeleteListUseCase } from "@/core/useCases/lists/DeleteList";
 import { GetUserListsUseCase } from "@/core/useCases/lists/GetUserLists";
+import { useListsStore } from "@/ui/stores/Lists.store";
 import { useListsViewModel } from "../Lists.viewModel";
 import {
 	createListsMock,
@@ -16,87 +17,69 @@ import {
 describe("Lists View Model - Unit Test - Suite", () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
+		useListsStore.setState({
+			lists: [],
+			currentList: null,
+			currentProducts: [],
+			loadingState: "idle",
+			error: null,
+		});
 	});
 
-	it("should create GetUserListsUseCase instance", () => {
+	it("should initialize with empty lists", () => {
 		const hook = renderHook(useListsViewModel);
-		expect(hook.result.current.loadLists).toBeDefined();
+		expect(hook.result.current.lists).toEqual([]);
 	});
 
-	it("should create CreateListUseCase instance", () => {
+	it("should have createList method defined", () => {
 		const hook = renderHook(useListsViewModel);
 		expect(hook.result.current.createList).toBeDefined();
 	});
 
-	it("should create DeleteListUseCase instance", () => {
+	it("should have deleteList method defined", () => {
 		const hook = renderHook(useListsViewModel);
 		expect(hook.result.current.deleteList).toBeDefined();
 	});
 
-	describe("Load Lists - Method Test - Suite", () => {
-		it("should set loading to true when loading lists is called", async () => {
-			const hook = renderHook(useListsViewModel);
-			act(() => {
-				hook.result.current.loadLists();
-			});
-
-			expect(hook.result.current.loading).toBe(true);
-		});
-
-		it("should set loading to false when lists are loaded", async () => {
-			const hook = renderHook(useListsViewModel);
-			await act(async () => {
-				hook.result.current.loadLists();
-			});
-
-			expect(hook.result.current.loading).toBe(false);
-		});
-
-		it("should set error to null when loading lists", async () => {
-			jest
-				.spyOn(GetUserListsUseCase.prototype, "execute")
-				.mockResolvedValue([]);
-
-			const hook = renderHook(useListsViewModel);
-			await act(async () => {
-				hook.result.current.loadLists();
-			});
-
-			expect(hook.result.current.error).toBe(null);
-		});
-
-		it("should set error to error message when loading lists fails", async () => {
-			jest
-				.spyOn(GetUserListsUseCase.prototype, "execute")
-				.mockRejectedValue(new Error("Erro ao buscar listas"));
-
-			const hook = renderHook(useListsViewModel);
-
-			await act(async () => {
-				hook.result.current.loadLists();
-			});
-
-			expect(hook.result.current.error).toBe("Erro ao buscar listas");
-		});
-
-		it("should return lists when loading lists is successful", async () => {
-			const listCount = 4;
-
+	describe("Auto Load Lists on Mount - Test Suite", () => {
+		it("should automatically load lists on mount", async () => {
 			jest
 				.spyOn(GetUserListsUseCase.prototype, "execute")
 				.mockResolvedValue(mockedListsData);
 
 			const hook = renderHook(useListsViewModel);
 
-			await act(async () => {
-				hook.result.current.loadLists();
+			await waitFor(() => {
+				expect(hook.result.current.lists).toHaveLength(listCount);
 			});
+		});
 
-			expect(hook.result.current.lists).toHaveLength(listCount);
+		it("should set loading to false after lists are loaded", async () => {
+			jest
+				.spyOn(GetUserListsUseCase.prototype, "execute")
+				.mockResolvedValue(mockedListsData);
+
+			const hook = renderHook(useListsViewModel);
+
+			await waitFor(() => {
+				expect(hook.result.current.loading).toBe(false);
+			});
+		});
+
+		it("should set error when loading lists fails", async () => {
+			jest
+				.spyOn(GetUserListsUseCase.prototype, "execute")
+				.mockRejectedValue(new Error("Erro ao buscar listas"));
+
+			const hook = renderHook(useListsViewModel);
+
+			await waitFor(() => {
+				expect(hook.result.current.error).toBe("Erro ao buscar listas");
+			});
 		});
 	});
 
-	describe("Create List - Method Test - Suite", () => {
+	describe("Create List - Method Test Suite", () => {
 		beforeEach(() => {
 			jest
 				.spyOn(GetUserListsUseCase.prototype, "execute")
@@ -106,69 +89,17 @@ describe("Lists View Model - Unit Test - Suite", () => {
 				.mockResolvedValue(mockedListDto);
 		});
 
-		it.failing(
-			"should set creating to true when creating list is called",
-			async () => {
-				const hook = renderHook(useListsViewModel);
-
-				expect(hook.result.current.creating).toBe(false);
-				await act(async () => {
-					await hook.result.current.createList(mockedCreateListDto);
-				});
-
-				expect(hook.result.current.creating).toBe(true);
-			},
-		);
-
-		it("should set creating to false when list is created", async () => {
+		it("should return true when creating list is successful", async () => {
 			const hook = renderHook(useListsViewModel);
 
-			await act(async () => {
-				hook.result.current.createList(mockedCreateListDto);
+			const result = await act(async () => {
+				return await hook.result.current.createList(mockedCreateListDto);
 			});
 
-			expect(hook.result.current.creating).toBe(false);
+			expect(result).toBe(true);
 		});
 
-		it("should set error to null when creating list", async () => {
-			const hook = renderHook(useListsViewModel);
-
-			await act(async () => {
-				hook.result.current.createList(mockedCreateListDto);
-			});
-
-			expect(hook.result.current.error).toBe(null);
-		});
-
-		it("should set error to error message when creating list fails", async () => {
-			jest
-				.spyOn(CreateListUseCase.prototype, "execute")
-				.mockRejectedValue(new Error(useCaseErrorMessage));
-
-			const hook = renderHook(useListsViewModel);
-
-			expect(hook.result.current.error).toBe(null);
-
-			await act(async () => {
-				hook.result.current.createList(mockedCreateListDto);
-			});
-
-			expect(hook.result.current.error).toBe(useCaseErrorMessage);
-		});
-
-		it("should set creating to false when creating list fails", async () => {
-			const hook = renderHook(useListsViewModel);
-
-			expect(hook.result.current.creating).toBe(false);
-
-			await act(async () => {
-				hook.result.current.createList(mockedCreateListDto);
-			});
-
-			expect(hook.result.current.creating).toBe(false);
-		});
-
-		it("should call loadLists when list is created", async () => {
+		it("should reload lists after creating a new list", async () => {
 			const loadListsUseCaseSpy = jest.spyOn(
 				GetUserListsUseCase.prototype,
 				"execute",
@@ -176,28 +107,29 @@ describe("Lists View Model - Unit Test - Suite", () => {
 
 			const hook = renderHook(useListsViewModel);
 
-			expect(hook.result.current.creating).toBe(false);
-
 			await act(async () => {
-				hook.result.current.createList(mockedCreateListDto);
+				await hook.result.current.createList(mockedCreateListDto);
 			});
 
 			expect(loadListsUseCaseSpy).toHaveBeenCalledTimes(2);
 		});
 
-		it("should return true when creating list is successful", async () => {
+		it("should return false when creating list fails", async () => {
+			jest
+				.spyOn(CreateListUseCase.prototype, "execute")
+				.mockRejectedValue(new Error(useCaseErrorMessage));
+
 			const hook = renderHook(useListsViewModel);
 
-			expect(hook.result.current.creating).toBe(false);
+			const result = await act(async () => {
+				return await hook.result.current.createList(mockedCreateListDto);
+			});
 
-			const createListBooleanResult =
-				await hook.result.current.createList(mockedCreateListDto);
-
-			expect(createListBooleanResult).toBeTruthy();
+			expect(result).toBe(false);
 		});
 	});
 
-	describe("Delete List - Method Test - Suite", () => {
+	describe("Delete List - Method Test Suite", () => {
 		const mockListId = "list-123";
 
 		beforeEach(() => {
@@ -209,76 +141,17 @@ describe("Lists View Model - Unit Test - Suite", () => {
 				.mockResolvedValue(undefined);
 		});
 
-		it.failing(
-			"should set deleting to true when deleting list is called",
-			async () => {
-				const hook = renderHook(useListsViewModel);
-
-				expect(hook.result.current.deleting).toBe(false);
-
-				await act(async () => {
-					await hook.result.current.deleteList(mockListId);
-				});
-
-				expect(hook.result.current.deleting).toBe(true);
-			},
-		);
-
-		it("should set deleting to false when list is deleted", async () => {
+		it("should return true when deleting list is successful", async () => {
 			const hook = renderHook(useListsViewModel);
 
-			await act(async () => {
-				hook.result.current.deleteList(mockListId);
+			const result = await act(async () => {
+				return await hook.result.current.deleteList(mockListId);
 			});
 
-			expect(hook.result.current.deleting).toBe(false);
+			expect(result).toBe(true);
 		});
 
-		it("should set error to null when deleting list", async () => {
-			const hook = renderHook(useListsViewModel);
-
-			await act(async () => {
-				hook.result.current.deleteList(mockListId);
-			});
-
-			expect(hook.result.current.error).toBe(null);
-		});
-
-		it("should set error to error message when deleting list fails", async () => {
-			const errorMessage = "Erro ao deletar lista";
-
-			jest
-				.spyOn(DeleteListUseCase.prototype, "execute")
-				.mockRejectedValue(new Error(errorMessage));
-
-			const hook = renderHook(useListsViewModel);
-
-			expect(hook.result.current.error).toBe(null);
-
-			await act(async () => {
-				hook.result.current.deleteList(mockListId);
-			});
-
-			expect(hook.result.current.error).toBe(errorMessage);
-		});
-
-		it("should set deleting to false when deleting list fails", async () => {
-			jest
-				.spyOn(DeleteListUseCase.prototype, "execute")
-				.mockRejectedValue(new Error("Erro"));
-
-			const hook = renderHook(useListsViewModel);
-
-			expect(hook.result.current.deleting).toBe(false);
-
-			await act(async () => {
-				hook.result.current.deleteList(mockListId);
-			});
-
-			expect(hook.result.current.deleting).toBe(false);
-		});
-
-		it("should call loadLists when list is deleted", async () => {
+		it("should reload lists after deleting a list", async () => {
 			const loadListsUseCaseSpy = jest.spyOn(
 				GetUserListsUseCase.prototype,
 				"execute",
@@ -287,24 +160,50 @@ describe("Lists View Model - Unit Test - Suite", () => {
 			const hook = renderHook(useListsViewModel);
 
 			await act(async () => {
-				hook.result.current.deleteList(mockListId);
+				await hook.result.current.deleteList(mockListId);
 			});
 
-			// É chamado 2 vezes: 1x no useEffect do mount + 1x após deletar
 			expect(loadListsUseCaseSpy).toHaveBeenCalledTimes(2);
 		});
 
-		it("should return true when deleting list is successful", async () => {
+		it("should return false when deleting list fails", async () => {
+			jest
+				.spyOn(DeleteListUseCase.prototype, "execute")
+				.mockRejectedValue(new Error("Erro ao deletar lista"));
+
 			const hook = renderHook(useListsViewModel);
 
-			const deleteListBooleanResult =
-				await hook.result.current.deleteList(mockListId);
+			const result = await act(async () => {
+				return await hook.result.current.deleteList(mockListId);
+			});
 
-			expect(deleteListBooleanResult).toBeTruthy();
+			expect(result).toBe(false);
 		});
 	});
 
-	describe("Navigate To Create - Method Test - Suite", () => {
+	describe("Refresh - Method Test Suite", () => {
+		it("should refresh lists when refresh is called", async () => {
+			jest
+				.spyOn(GetUserListsUseCase.prototype, "execute")
+				.mockResolvedValue(mockedListsData);
+
+			const hook = renderHook(useListsViewModel);
+
+			await waitFor(() => {
+				expect(hook.result.current.lists).toHaveLength(listCount);
+			});
+
+			act(() => {
+				hook.result.current.refresh();
+			});
+
+			await waitFor(() => {
+				expect(hook.result.current.refreshing).toBe(false);
+			});
+		});
+	});
+
+	describe("Navigate To Create - Method Test Suite", () => {
 		it("should navigate to create list when navigateToCreate is called", () => {
 			const mockRouter = require("expo-router");
 			const pushSpy = jest.spyOn(mockRouter, "useRouter").mockReturnValue({
@@ -321,7 +220,7 @@ describe("Lists View Model - Unit Test - Suite", () => {
 		});
 	});
 
-	describe("Navigate To Details - Method Test - Suite", () => {
+	describe("Navigate To Details - Method Test Suite", () => {
 		it("should navigate to list details when navigateToDetails is called", () => {
 			const mockListId = "list-123";
 			const mockRouter = require("expo-router");
@@ -339,31 +238,7 @@ describe("Lists View Model - Unit Test - Suite", () => {
 		});
 	});
 
-	describe("Clear Error - Method Test - Suite", () => {
-		it("should set error to null when clearError is called", async () => {
-			const hook = renderHook(useListsViewModel);
-
-			// Primeiro, configura um erro
-			jest
-				.spyOn(GetUserListsUseCase.prototype, "execute")
-				.mockRejectedValue(new Error("Erro de teste"));
-
-			await act(async () => {
-				hook.result.current.loadLists();
-			});
-
-			expect(hook.result.current.error).toBe("Erro de teste");
-
-			// Agora limpa o erro
-			act(() => {
-				hook.result.current.clearError();
-			});
-
-			expect(hook.result.current.error).toBe(null);
-		});
-	});
-
-	describe("Has Content - Method Test - Suite", () => {
+	describe("Has Content - Method Test Suite", () => {
 		it("should return true when lists are loaded", async () => {
 			jest
 				.spyOn(GetUserListsUseCase.prototype, "execute")
@@ -371,29 +246,25 @@ describe("Lists View Model - Unit Test - Suite", () => {
 
 			const hook = renderHook(useListsViewModel);
 
-			await act(async () => {
-				hook.result.current.loadLists();
+			await waitFor(() => {
+				expect(hook.result.current.hasContent).toBe(true);
 			});
-
-			expect(hook.result.current.hasContent).toBe(true);
 		});
 
-		it("should return false when lists are not loaded", async () => {
+		it("should return false when lists are empty", async () => {
 			jest
 				.spyOn(GetUserListsUseCase.prototype, "execute")
 				.mockResolvedValue([]);
 
 			const hook = renderHook(useListsViewModel);
 
-			await act(async () => {
-				hook.result.current.loadLists();
+			await waitFor(() => {
+				expect(hook.result.current.hasContent).toBe(false);
 			});
-
-			expect(hook.result.current.hasContent).toBe(false);
 		});
 	});
 
-	describe("Quantity Text - Method Test - Suite", () => {
+	describe("Quantity Text - Method Test Suite", () => {
 		it("should return the correct quantity text when lists is empty", async () => {
 			jest
 				.spyOn(GetUserListsUseCase.prototype, "execute")
@@ -401,14 +272,12 @@ describe("Lists View Model - Unit Test - Suite", () => {
 
 			const hook = renderHook(useListsViewModel);
 
-			await act(async () => {
-				hook.result.current.loadLists();
+			await waitFor(() => {
+				expect(hook.result.current.quantityText).toBe("Sem listas no momento");
 			});
-
-			expect(hook.result.current.quantityText).toBe("Sem listas no momento");
 		});
 
-		it("should return the correct quantity text when lists is not empty", async () => {
+		it("should return the correct quantity text when lists has one item", async () => {
 			const singleListMock = createListsMock(1);
 
 			jest
@@ -417,11 +286,9 @@ describe("Lists View Model - Unit Test - Suite", () => {
 
 			const hook = renderHook(useListsViewModel);
 
-			await act(async () => {
-				hook.result.current.loadLists();
+			await waitFor(() => {
+				expect(hook.result.current.quantityText).toBe("1 lista");
 			});
-
-			expect(hook.result.current.quantityText).toBe("1 lista");
 		});
 
 		it("should return the correct quantity text when lists has multiple items", async () => {
@@ -431,11 +298,9 @@ describe("Lists View Model - Unit Test - Suite", () => {
 
 			const hook = renderHook(useListsViewModel);
 
-			await act(async () => {
-				hook.result.current.loadLists();
+			await waitFor(() => {
+				expect(hook.result.current.quantityText).toBe(`${listCount} listas`);
 			});
-
-			expect(hook.result.current.quantityText).toBe(`${listCount} listas`);
 		});
 	});
 });

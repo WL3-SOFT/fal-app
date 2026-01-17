@@ -4,27 +4,16 @@ import { schema } from "./schemas";
 
 const DATABASE_NAME = "faca-lista.db";
 
-const expoDb = openDatabaseSync(DATABASE_NAME);
+const expoDb = openDatabaseSync(DATABASE_NAME, {
+	enableChangeListener: true,
+});
 
-/**
- * Cliente Drizzle ORM
- *
- * Fornece acesso type-safe ao banco de dados com:
- * - Queries tipadas
- * - Relacionamentos automáticos
- * - Migrations gerenciadas
- * - Soft delete pattern
- *
- * @example
- * ```ts
- * import { db } from '@/db/client';
- *
- * // Query com soft delete automático
- * const activeLists = await db.query.listsTable.findMany({
- *   where: (lists, { isNull }) => isNull(lists.deletedAt)
- * });
- * ```
- */
+try {
+	expoDb.getAllSync("PRAGMA journal_mode = WAL;");
+} catch (error) {
+	console.warn("WAL mode error:", error);
+}
+
 export const db = drizzle(expoDb, { schema });
 
 export { expoDb };

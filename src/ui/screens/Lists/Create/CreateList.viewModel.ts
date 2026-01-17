@@ -1,15 +1,13 @@
 import { useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import {
+	DEFAULT_USER_ID,
 	MAXIMUM_LIST_DESCRIPTION_LENGTH,
 	MAXIMUM_LIST_NAME_LENGTH,
 	MINIMUM_LIST_DESCRIPTION_LENGTH,
 	MINIMUM_LIST_NAME_LENGTH,
 } from "@/core/constraints";
-import { CreateListUseCase } from "@/core/useCases";
-import { listsRepository } from "@/data/repositories";
-
-const DEFAULT_USER_ID = "24";
+import { useListsStore } from "@/ui/stores/Lists.store";
 
 type FormData = {
 	name: string;
@@ -18,29 +16,28 @@ type FormData = {
 	canBeShared: boolean;
 };
 
-type CreateListState = {
+type FormState = {
 	formData: FormData;
-	creating: boolean;
-	error: string | null;
 	fieldErrors: Partial<Record<keyof FormData, string>>;
 };
 
 export const useCreateListViewModel = () => {
 	const router = useRouter();
 
-	const [state, setState] = useState<CreateListState>({
+	const [state, setState] = useState<FormState>({
 		formData: {
 			name: "",
 			description: "",
 			isPublic: false,
 			canBeShared: false,
 		},
-		creating: false,
-		error: null,
 		fieldErrors: {},
 	});
 
-	const createListUseCase = new CreateListUseCase(listsRepository);
+	const loadingState = useListsStore((state) => state.loadingState);
+	const error = useListsStore((state) => state.error);
+	const createListAction = useListsStore((state) => state.createList);
+	const clearErrorAction = useListsStore((state) => state.clearError);
 
 	const setName = useCallback((name: string) => {
 		setState((prev) => ({
@@ -105,29 +102,20 @@ export const useCreateListViewModel = () => {
 			return false;
 		}
 
-		setState((prev) => ({ ...prev, creating: true, error: null }));
-
 		try {
-			await createListUseCase.execute({
+			await createListAction({
 				name: state.formData.name,
 				description: state.formData.description,
-				isPublic: state.formData.isPublic,
-				canBeShared: state.formData.canBeShared,
 				createdBy: DEFAULT_USER_ID,
 			});
-
-			setState((prev) => ({ ...prev, creating: false }));
 
 			router.back();
 
 			return true;
-		} catch (error) {
-			const errorMessage =
-				error instanceof Error ? error.message : "Erro ao criar lista";
-			setState((prev) => ({ ...prev, error: errorMessage, creating: false }));
+		} catch {
 			return false;
 		}
-	}, [state.formData, validateForm, router, createListUseCase]);
+	}, [state.formData, validateForm, router, createListAction]);
 
 	const resetForm = useCallback(() => {
 		setState({
@@ -137,25 +125,24 @@ export const useCreateListViewModel = () => {
 				isPublic: false,
 				canBeShared: false,
 			},
-			creating: false,
-			error: null,
 			fieldErrors: {},
 		});
 	}, []);
 
 	const clearError = useCallback(() => {
-		setState((prev) => ({ ...prev, error: null }));
-	}, []);
+		clearErrorAction();
+	}, [clearErrorAction]);
 
+	const creating = loadingState === "loading";
 	const canSubmit =
 		state.formData.name.trim().length > 0 &&
 		state.formData.description.trim().length > 0 &&
-		!state.creating;
+		!creating;
 
 	return {
 		formData: state.formData,
-		creating: state.creating,
-		error: state.error,
+		creating,
+		error,
 		fieldErrors: state.fieldErrors,
 		canSubmit,
 		setName,

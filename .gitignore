@@ -60,3 +60,5 @@ allure-report/
 lefthook-local.yml
 
 .env.local
+
+faca-lista.db

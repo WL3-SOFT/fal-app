@@ -66,4 +66,3 @@ jest.mock("drizzle-orm/expo-sqlite", () => {
 		drizzle: jest.fn(() => mockDb),
 	};
 });
-

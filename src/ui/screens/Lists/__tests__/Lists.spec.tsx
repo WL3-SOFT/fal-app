@@ -116,7 +116,7 @@ describe("List View - Component Test - Suite", () => {
 			expect(ui.getByText("Crie sua")).toBeVisible();
 			expect(ui.getByText("primeira")).toBeVisible();
 			expect(ui.getByText("lista!")).toBeVisible();
-		})
+		});
 
 		it("should render the create list button if list is empty", async () => {
 			const ui = render(<ListsView />);

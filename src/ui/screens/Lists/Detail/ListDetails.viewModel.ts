@@ -1,19 +1,9 @@
 import { useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import type { List } from "@/core/entities";
 import type { UpdateListDto } from "@/core/interfaces/repositories/IListsRepository";
-import {
-	DeleteListUseCase,
-	GetListByIdUseCase,
-	IncrementListUsageUseCase,
-	UpdateListUseCase,
-} from "@/core/useCases";
-import { listsRepository } from "@/data/repositories";
+import { useListsStore } from "@/ui/stores/Lists.store";
 
-type ListDetailsState = {
-	list: List | null;
-	loading: boolean;
-	error: string | null;
+type LocalState = {
 	updating: boolean;
 	deleting: boolean;
 };
@@ -21,111 +11,85 @@ type ListDetailsState = {
 export const useListDetailsViewModel = (listId: string) => {
 	const router = useRouter();
 
-	const [state, setState] = useState<ListDetailsState>({
-		list: null,
-		loading: false,
-		error: null,
+	const [state, setState] = useState<LocalState>({
 		updating: false,
 		deleting: false,
 	});
 
-	const getListByIdUseCase = new GetListByIdUseCase(listsRepository);
-	const updateListUseCase = new UpdateListUseCase(listsRepository);
-	const deleteListUseCase = new DeleteListUseCase(listsRepository);
-	const incrementUsageUseCase = new IncrementListUsageUseCase(listsRepository);
+	const list = useListsStore((state) => state.currentList);
+	const loadingState = useListsStore((state) => state.loadingState);
+	const error = useListsStore((state) => state.error);
 
-	const loadList = useCallback(async () => {
-		setState((prev) => ({ ...prev, loading: true, error: null }));
+	const loadList = useListsStore((state) => state.loadList);
+	const updateListAction = useListsStore((state) => state.updateList);
+	const deleteListAction = useListsStore((state) => state.deleteList);
+	const incrementUsageAction = useListsStore((state) => state.incrementUsage);
+	const clearErrorAction = useListsStore((state) => state.clearError);
 
-		try {
-			const list = await getListByIdUseCase.execute(listId);
-			setState((prev) => ({ ...prev, list, loading: false }));
-		} catch (error) {
-			const errorMessage =
-				error instanceof Error ? error.message : "Erro ao carregar lista";
-			setState((prev) => ({ ...prev, error: errorMessage, loading: false }));
-		}
-	}, [listId, getListByIdUseCase]);
+	useEffect(() => {
+		loadList(listId);
+	}, [listId, loadList]);
 
 	const updateList = useCallback(
 		async (data: UpdateListDto) => {
-			setState((prev) => ({ ...prev, updating: true, error: null }));
+			setState((prev) => ({ ...prev, updating: true }));
 
 			try {
-				await updateListUseCase.execute(listId, data);
-
-				await loadList();
+				await updateListAction(listId, data);
+				await loadList(listId);
 
 				setState((prev) => ({ ...prev, updating: false }));
 
 				return true;
-			} catch (error) {
-				const errorMessage =
-					error instanceof Error ? error.message : "Erro ao atualizar lista";
-				setState((prev) => ({
-					...prev,
-					error: errorMessage,
-					updating: false,
-				}));
+			} catch {
+				setState((prev) => ({ ...prev, updating: false }));
 				return false;
 			}
 		},
-		[listId, loadList, updateListUseCase],
+		[listId, updateListAction, loadList],
 	);
 
 	const deleteList = useCallback(async () => {
-		setState((prev) => ({ ...prev, deleting: true, error: null }));
+		setState((prev) => ({ ...prev, deleting: true }));
 
 		try {
-			await deleteListUseCase.execute(listId);
-
+			await deleteListAction(listId);
 			setState((prev) => ({ ...prev, deleting: false }));
 
 			router.back();
 
 			return true;
-		} catch (error) {
-			const errorMessage =
-				error instanceof Error ? error.message : "Erro ao deletar lista";
-			setState((prev) => ({ ...prev, error: errorMessage, deleting: false }));
+		} catch {
+			setState((prev) => ({ ...prev, deleting: false }));
 			return false;
 		}
-	}, [listId, router, deleteListUseCase]);
+	}, [listId, router, deleteListAction]);
 
 	const incrementUsage = useCallback(async () => {
 		try {
-			await incrementUsageUseCase.execute(listId);
-			await loadList();
-		} catch (error) {
-			const errorMessage =
-				error instanceof Error
-					? error.message
-					: "Erro ao incrementar uso da lista";
-			setState((prev) => ({ ...prev, error: errorMessage }));
-		}
-	}, [listId, loadList, incrementUsageUseCase]);
+			await incrementUsageAction(listId);
+			await loadList(listId);
+		} catch {}
+	}, [listId, incrementUsageAction, loadList]);
 
 	const toggleActive = useCallback(async () => {
-		if (!state.list) return false;
+		if (!list) return false;
 
-		return updateList({ isActive: !state.list.isActive });
-	}, [state.list, updateList]);
+		return updateList({ isActive: !list.isActive });
+	}, [list, updateList]);
 
 	const clearError = useCallback(() => {
-		setState((prev) => ({ ...prev, error: null }));
-	}, []);
+		clearErrorAction();
+	}, [clearErrorAction]);
 
-	useEffect(() => {
-		loadList();
-	}, [loadList]);
+	const loading = loadingState === "loading";
 
 	return {
-		list: state.list,
-		loading: state.loading,
-		error: state.error,
+		list,
+		loading,
+		error,
 		updating: state.updating,
 		deleting: state.deleting,
-		loadList,
 		updateList,
 		deleteList,
 		incrementUsage,

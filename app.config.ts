@@ -1,4 +1,5 @@
 /** biome-ignore-all lint/style/useNamingConvention: Não é necessário impor padrão de nomeclatura no arquivo de configuração */
+// biome-ignore lint/correctness/noUndeclaredDependencies: Dependência presente
 import "tsx/cjs";
 import type { ConfigContext, ExpoConfig } from "expo/config";
 

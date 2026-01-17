@@ -1,5 +1,9 @@
 import { faker } from "#test-utils";
-import type { CreateListDto, ListDto, ListWithProductCountDto } from "@/core/interfaces/repositories/IListsRepository";
+import type {
+	CreateListDto,
+	ListDto,
+	ListWithProductCountDto,
+} from "@/core/interfaces/repositories/IListsRepository";
 
 export const createListsMock = (length: number): ListWithProductCountDto[] => {
 	return Array.from(

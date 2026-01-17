@@ -1,1 +1,1 @@
-export { ListsRepository, listsRepository } from "./ListsRepository";
+export { ListsRepository, listsRepository } from "./Lists.repository";

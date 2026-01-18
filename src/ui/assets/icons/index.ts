@@ -1,3 +1,4 @@
+export * from "./arrowLeft";
 export * from "./history";
 export * from "./home";
 export * from "./homeOutline";

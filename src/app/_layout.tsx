@@ -3,14 +3,27 @@ import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { isRunningInExpoGo } from "expo";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { StrictMode, useEffect } from "react";
-import { ActivityIndicator, Appearance, Text, View } from "react-native";
+import * as SystemUi from "expo-system-ui";
+import { StrictMode, useEffect, useState } from "react";
+import { Appearance, Text, View } from "react-native";
 import { db } from "@/db/client";
 import { storage } from "@/infra/modules";
 import { AppProviders } from "@/ui/providers";
 import migrations from "../../drizzle/migrations";
 
+const setThemeMode = async () => {
+	const themeMode = await storage.get("themeMode");
+	if (themeMode) {
+		Appearance.setColorScheme(themeMode);
+		SystemUi.setBackgroundColorAsync(
+			themeMode === "dark" ? "#383838" : "#F5F5F5",
+		);
+	}
+};
+
 const isProduction = process.env.NODE_ENV === "production";
+
+SplashScreen.preventAutoHideAsync();
 
 Sentry.init({
 	dsn: process.env["EXPO_PUBLIC_SENTRY_DSN"],
@@ -36,11 +49,6 @@ Sentry.init({
 	enabled: isProduction,
 });
 
-SplashScreen.setOptions({
-	duration: 1000,
-	fade: true,
-});
-
 const Application = () => (
 	<AppProviders>
 		<Stack>
@@ -53,9 +61,12 @@ const Application = () => (
 );
 
 function RootLayout() {
+	const [isReady, setIsReady] = useState(false);
 	const { success, error } = useMigrations(db, migrations);
 
 	useEffect(() => {
+		setThemeMode();
+
 		if (error) {
 			console.error("❌ Erro na migração:", error);
 			Sentry.captureException(error, {
@@ -66,17 +77,15 @@ function RootLayout() {
 		if (success) {
 			console.log("✅ Migrations concluídas com sucesso");
 		}
+
+		setIsReady(success);
 	}, [success, error]);
 
 	useEffect(() => {
-		const setThemeMode = async () => {
-			const themeMode = await storage.get("themeMode");
-			if (themeMode) {
-				Appearance.setColorScheme(themeMode);
-			}
-		};
-		setThemeMode();
-	}, []);
+		if (isReady) {
+			SplashScreen.hide();
+		}
+	}, [isReady]);
 
 	if (error) {
 		return (
@@ -104,26 +113,6 @@ function RootLayout() {
 						textAlign: "center",
 					}}>
 					{error.message}
-				</Text>
-			</View>
-		);
-	}
-
-	if (!success) {
-		return (
-			<View
-				style={{
-					flex: 1,
-					justifyContent: "center",
-					alignItems: "center",
-					backgroundColor: "#fff",
-				}}>
-				<ActivityIndicator
-					size="large"
-					color="#3b82f6"
-				/>
-				<Text style={{ marginTop: 16, fontSize: 14, color: "#666" }}>
-					Inicializando banco de dados...
 				</Text>
 			</View>
 		);

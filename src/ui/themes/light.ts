@@ -3,7 +3,7 @@ import { colors, spacing, typography } from "./tokens";
 
 export const lightTheme: Theme = {
 	colors: {
-		primary: colors.primary["6"],
+		primary: colors.primary["7"],
 		secondary: colors.secondary["6"],
 		tertiary: colors.tertiary["6"],
 
@@ -35,10 +35,17 @@ export const lightTheme: Theme = {
 			},
 		},
 		button: {
-			success: colors.primary["6"],
-			error: colors.primary["1"],
-			disabled: colors.neutral["4"],
-			default: colors.primary["6"],
+			neutral: {
+				background: colors.neutral["10"],
+				text: colors.neutral["2"],
+			},
+			success: { background: colors.primary["6"], text: colors.neutral["2"] },
+			error: { background: colors.primary["1"], text: colors.neutral["2"] },
+			disabled: { background: colors.neutral["5"], text: colors.neutral["2"] },
+			default: { background: colors.primary["6"], text: colors.neutral["2"] },
+		},
+		input: {
+			background: colors.neutral["3"],
 		},
 		neutralButton: {
 			default: colors.neutral["10"],

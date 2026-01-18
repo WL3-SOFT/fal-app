@@ -5,11 +5,6 @@ import { getDefaultConfig } from "expo/metro-config";
 const defaultConfig = getDefaultConfig(__dirname);
 const sentryConfig = getSentryExpoConfig(__dirname);
 
-// Adicionar extensão .sql ANTES de fazer merge
-if (defaultConfig?.resolver?.sourceExts) {
-	defaultConfig.resolver.sourceExts.push("sql");
-}
-
 // Merge correto: sentry config como base, depois default config com .sql
 const config = {
 	...sentryConfig,
@@ -19,6 +14,7 @@ const config = {
 		sourceExts: [
 			...(sentryConfig?.resolver?.sourceExts || []),
 			...(defaultConfig?.resolver?.sourceExts || []),
+			"sql",
 		],
 	},
 };

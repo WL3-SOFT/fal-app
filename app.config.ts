@@ -2,6 +2,7 @@
 // biome-ignore lint/correctness/noUndeclaredDependencies: Dependência presente
 import "tsx/cjs";
 import type { ConfigContext, ExpoConfig } from "expo/config";
+import { lightTheme } from "@/ui/themes";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
 	...config,
@@ -11,8 +12,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 	version: "0.1.0",
 	orientation: "portrait",
 	icon: "./src/ui/assets/images/icon.png",
+	backgroundColor: lightTheme.colors.background,
 	scheme: "fal",
-	userInterfaceStyle: "automatic",
+	userInterfaceStyle: "light",
 	newArchEnabled: true,
 	platforms: ["android"],
 	android: {
@@ -169,5 +171,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 				},
 			},
 		],
+		"expo-system-ui",
 	],
 });

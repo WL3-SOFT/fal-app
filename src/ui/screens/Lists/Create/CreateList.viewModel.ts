@@ -1,156 +1,85 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
-import { useCallback, useState } from "react";
 import {
-	DEFAULT_USER_ID,
-	MAXIMUM_LIST_DESCRIPTION_LENGTH,
-	MAXIMUM_LIST_NAME_LENGTH,
-	MINIMUM_LIST_DESCRIPTION_LENGTH,
-	MINIMUM_LIST_NAME_LENGTH,
-} from "@/core/constraints";
+	type SubmitErrorHandler,
+	type SubmitHandler,
+	useForm,
+} from "react-hook-form";
+import { DEFAULT_USER_ID } from "@/core/constraints";
+import { useToast } from "@/ui/hooks";
 import { useListsStore } from "@/ui/stores/Lists.store";
-
-type FormData = {
-	name: string;
-	description: string;
-	isPublic: boolean;
-	canBeShared: boolean;
-};
-
-type FormState = {
-	formData: FormData;
-	fieldErrors: Partial<Record<keyof FormData, string>>;
-};
+import { type CreateListFormData, createListSchema } from "./CreateList.types";
 
 export const useCreateListViewModel = () => {
-	const router = useRouter();
-
-	const [state, setState] = useState<FormState>({
-		formData: {
-			name: "",
-			description: "",
-			isPublic: false,
-			canBeShared: false,
+	const { push } = useRouter();
+	const { promise } = useToast();
+	const {
+		control,
+		handleSubmit,
+		formState: {
+			isSubmitting,
+			disabled,
+			isLoading,
+			isValid,
+			errors,
+			isSubmitSuccessful,
 		},
-		fieldErrors: {},
+	} = useForm<CreateListFormData>({
+		mode: "onSubmit",
+		reValidateMode: "onChange",
+		resolver: zodResolver(createListSchema),
 	});
 
-	const loadingState = useListsStore((state) => state.loadingState);
 	const error = useListsStore((state) => state.error);
 	const createListAction = useListsStore((state) => state.createList);
-	const clearErrorAction = useListsStore((state) => state.clearError);
 
-	const setName = useCallback((name: string) => {
-		setState((prev) => ({
-			...prev,
-			formData: { ...prev.formData, name },
-			fieldErrors: { ...prev.fieldErrors, name: undefined },
-		}));
-	}, []);
-
-	const setDescription = useCallback((description: string) => {
-		setState((prev) => ({
-			...prev,
-			formData: { ...prev.formData, description },
-			fieldErrors: { ...prev.fieldErrors, description: undefined },
-		}));
-	}, []);
-
-	const setIsPublic = useCallback((isPublic: boolean) => {
-		setState((prev) => ({
-			...prev,
-			formData: { ...prev.formData, isPublic },
-		}));
-	}, []);
-
-	const setCanBeShared = useCallback((canBeShared: boolean) => {
-		setState((prev) => ({
-			...prev,
-			formData: { ...prev.formData, canBeShared },
-		}));
-	}, []);
-
-	const validateForm = useCallback((): boolean => {
-		const errors: Partial<Record<keyof FormData, string>> = {};
-
-		if (!state.formData.name.trim()) {
-			errors.name = "Nome é obrigatório";
-		} else if (state.formData.name.trim().length < MINIMUM_LIST_NAME_LENGTH) {
-			errors.name = "Nome deve ter ao menos 3 caracteres";
-		} else if (state.formData.name.length > MAXIMUM_LIST_NAME_LENGTH) {
-			errors.name = "Nome deve ter no máximo 100 caracteres";
-		}
-
-		if (!state.formData.description.trim()) {
-			errors.description = "Descrição é obrigatória";
-		} else if (
-			state.formData.description.trim().length < MINIMUM_LIST_DESCRIPTION_LENGTH
-		) {
-			errors.description = "Descrição deve ter ao menos 3 caracteres";
-		} else if (
-			state.formData.description.length > MAXIMUM_LIST_DESCRIPTION_LENGTH
-		) {
-			errors.description = "Descrição deve ter no máximo 500 caracteres";
-		}
-
-		setState((prev) => ({ ...prev, fieldErrors: errors }));
-
-		return Object.keys(errors).length === 0;
-	}, [state.formData]);
-
-	const createList = useCallback(async () => {
-		if (!validateForm()) {
-			return false;
-		}
-
-		try {
-			await createListAction({
-				name: state.formData.name,
-				description: state.formData.description,
-				createdBy: DEFAULT_USER_ID,
-			});
-
-			router.back();
-
-			return true;
-		} catch {
-			return false;
-		}
-	}, [state.formData, validateForm, router, createListAction]);
-
-	const resetForm = useCallback(() => {
-		setState({
-			formData: {
-				name: "",
+	const onSubmit: SubmitHandler<CreateListFormData> = async (
+		formData: CreateListFormData,
+	) => {
+		const result = await promise({
+			promise: createListAction({
+				name: formData.name,
 				description: "",
-				isPublic: false,
 				canBeShared: false,
+				isPublic: false,
+				createdBy: DEFAULT_USER_ID,
+			}),
+			success: {
+				message: "Lista criada com sucesso!",
 			},
-			fieldErrors: {},
+			error: {
+				message: (error: Error) =>
+					error instanceof Error ? error.message : "Erro ao criar lista",
+			},
+			loading: {
+				message: "Criando lista...",
+			},
 		});
-	}, []);
 
-	const clearError = useCallback(() => {
-		clearErrorAction();
-	}, [clearErrorAction]);
+		if (!result.success) {
+			return;
+		}
 
-	const creating = loadingState === "loading";
-	const canSubmit =
-		state.formData.name.trim().length > 0 &&
-		state.formData.description.trim().length > 0 &&
-		!creating;
+		const { id } = result.data;
+
+		push(`/lists/${id}`);
+	};
+
+	const onError: SubmitErrorHandler<CreateListFormData> = (errors) => {
+		console.log(`Error: ${{ errors }}`);
+	};
+
+	const createList = handleSubmit(onSubmit, onError);
+
+	const canSubmit = isValid && !disabled && !isLoading;
 
 	return {
-		formData: state.formData,
-		creating,
 		error,
-		fieldErrors: state.fieldErrors,
+		fieldErrors: errors,
 		canSubmit,
-		setName,
-		setDescription,
-		setIsPublic,
-		setCanBeShared,
 		createList,
-		resetForm,
-		clearError,
+		control,
+		isSubmitting,
+		isSubmitSuccessful,
 	};
 };

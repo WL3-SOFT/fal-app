@@ -38,21 +38,21 @@ export class CreateListUseCase {
 			);
 		}
 
-		if (!data.description || data.description.trim().length === 0) {
-			throw new CreateListValidationError("Descrição da lista é obrigatória");
-		}
+		// if (!data.description || data.description.trim().length === 0) {
+		// 	throw new CreateListValidationError("Descrição da lista é obrigatória");
+		// }
 
-		if (data.description.trim().length < MINIMUM_LIST_DESCRIPTION_LENGTH) {
-			throw new CreateListValidationError(
-				`Descrição da lista deve ter ao menos ${MINIMUM_LIST_DESCRIPTION_LENGTH} caracteres`,
-			);
-		}
+		// if (data.description.trim().length < MINIMUM_LIST_DESCRIPTION_LENGTH) {
+		// 	throw new CreateListValidationError(
+		// 		`Descrição da lista deve ter ao menos ${MINIMUM_LIST_DESCRIPTION_LENGTH} caracteres`,
+		// 	);
+		// }
 
-		if (data.description.length > MAXIMUM_LIST_DESCRIPTION_LENGTH) {
-			throw new CreateListValidationError(
-				`Descrição da lista deve ter no máximo ${MAXIMUM_LIST_DESCRIPTION_LENGTH} caracteres`,
-			);
-		}
+		// if (data.description.length > MAXIMUM_LIST_DESCRIPTION_LENGTH) {
+		// 	throw new CreateListValidationError(
+		// 		`Descrição da lista deve ter no máximo ${MAXIMUM_LIST_DESCRIPTION_LENGTH} caracteres`,
+		// 	);
+		// }
 
 		if (!data.createdBy || data.createdBy.trim().length === 0) {
 			throw new CreateListValidationError("Usuário criador é obrigatório");

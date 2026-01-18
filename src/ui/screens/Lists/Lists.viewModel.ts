@@ -1,5 +1,5 @@
-import { useRouter } from "expo-router";
-import { useCallback, useEffect, useMemo } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useMemo } from "react";
 import { DEFAULT_USER_ID } from "@/core/constraints";
 import { useListsStore } from "@/ui/stores/Lists.store";
 
@@ -20,9 +20,11 @@ export const useListsViewModel = () => {
 		[lists],
 	);
 
-	useEffect(() => {
-		loadLists(DEFAULT_USER_ID);
-	}, [loadLists]);
+	useFocusEffect(
+		useCallback(() => {
+			loadLists(DEFAULT_USER_ID);
+		}, [loadLists]),
+	);
 
 	const navigateToCreate = useCallback(() => {
 		router.push("/lists/create");

@@ -16,7 +16,7 @@ export interface HeaderProps {
 		type: "logo" | "backButton" | "custom";
 	};
 	rightElement?: {
-		type: "button" | "custom";
+		type: "button" | "custom" | "avatar";
 		action?: () => void;
 	};
 }

@@ -25,12 +25,21 @@ export default function ListsLayout() {
 					},
 				}}
 			/>
-			{/* <Stack.Screen
+			<Stack.Screen
 				name="create"
 				options={{
-					title: "Criar Lista",
+					header(props) {
+						return (
+							<Header.minimalist
+								{...props}
+								leftElement={{
+									type: "backButton",
+								}}
+							/>
+						);
+					},
 				}}
-			/> */}
+			/>
 		</Stack>
 	);
 }

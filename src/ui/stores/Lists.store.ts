@@ -34,7 +34,7 @@ interface ListsState {
 	loadLists: (userId: string) => Promise<void>;
 	loadList: (listId: string) => Promise<void>;
 	loadListProducts: (listId: string) => Promise<void>;
-	createList: (data: CreateListDto) => Promise<void>;
+	createList: (data: CreateListDto) => Promise<ListDto>;
 	updateList: (listId: string, data: UpdateListDto) => Promise<void>;
 	deleteList: (listId: string) => Promise<void>;
 	incrementUsage: (listId: string) => Promise<void>;
@@ -143,11 +143,13 @@ export const useListsStore = create<ListsState>()(
 
 			try {
 				const useCase = new CreateListUseCase(repository);
-				await useCase.execute(data);
+				const list = await useCase.execute(data);
 
 				set((state) => {
 					state.loadingState = "success";
 				});
+
+				return list;
 			} catch (error) {
 				set((state) => {
 					state.error =

@@ -4,33 +4,25 @@ interface Colors {
 	primary: string;
 	secondary: string;
 	tertiary: string;
-
 	background: string;
 	surface: string;
 	card: string;
-
 	text: string;
 	textSecondary: string;
 	textDisabled: string;
-
 	error: string;
 	success: string;
 	warning: string;
 	info: string;
-
 	title: string;
 	subtitle: string;
-
 	border: string;
 	divider: string;
-
 	highlightPrice: string;
-
 	fallback: {
 		text: string;
 		icon: string;
 	};
-
 	tab: {
 		active: {
 			icon: string;
@@ -41,24 +33,39 @@ interface Colors {
 			background: string;
 		};
 	};
-
 	button: {
-		success: string;
-		error: string;
-		disabled: string;
-		default: string;
+		neutral: {
+			background: string;
+			text: string;
+		};
+		success: {
+			background: string;
+			text: string;
+		};
+		error: {
+			background: string;
+			text: string;
+		};
+		disabled: {
+			background: string;
+			text: string;
+		};
+		default: {
+			background: string;
+			text: string;
+		};
 	};
-
+	input: {
+		background: string;
+	};
 	neutralButton: {
 		default: string;
 	};
-
 	saveSummary: {
 		title: string;
 		price: string;
 		count: string;
 	};
-
 	legend: {
 		icon: string;
 		text: string;

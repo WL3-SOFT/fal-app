@@ -63,6 +63,9 @@ const config = {
 		"node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|@faker-js)",
 	],
 	moduleNameMapper: {
+		"^react-native-nitro-toast$": "<rootDir>/__mocks__/react-native-nitro-toast.ts",
+		"^expo-sqlite$": "<rootDir>/__mocks__/expo-sqlite.ts",
+		"^expo-router$": "<rootDir>/__mocks__/expo-router.ts",
 		"^@/(.*)$": "<rootDir>/src/$1",
 		"^@app/(.*)$": "<rootDir>/src/app/$1",
 		"^@components/(.*)$": "<rootDir>/src/ui/components/$1",

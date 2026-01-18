@@ -3,20 +3,22 @@ import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@/ui/hooks";
 import { Avatar } from "../../Avatar";
-import { TextButton } from "../../Buttons";
+import { BackButton } from "../../Buttons";
 import { Logo } from "../../Logo";
 import { createHeaderStyles } from "./MinimalistHeader.styles";
 import type { HeaderProps } from "./MinimalistHeader.types";
 
 export const MinimalistHeader = (props: HeaderProps) => {
-	const { route, leftElement, navigation } = props;
+	const { route, leftElement, navigation, rightElement } = props;
 
 	const shouldShowLogo =
 		leftElement?.type === "logo" || route?.name === "index";
 
 	const shouldShowBackButton = leftElement?.type === "backButton";
 
-	const backButtonLabel = route?.path || "Voltar";
+	const shouldShowAvatar = rightElement?.type === "avatar";
+
+	const backButtonLabel = route?.path || "voltar";
 
 	const backButtonCallback = () => {
 		navigation?.goBack();
@@ -35,13 +37,13 @@ export const MinimalistHeader = (props: HeaderProps) => {
 		<View style={styles.container}>
 			{shouldShowLogo && <Logo />}
 			{shouldShowBackButton && (
-				<TextButton
-					title={backButtonLabel}
+				<BackButton
 					onPress={backButtonCallback}
-					variant="text"
+					id="back-button"
+					title={backButtonLabel}
 				/>
 			)}
-			<Avatar />
+			{shouldShowAvatar && <Avatar />}
 		</View>
 	);
 };

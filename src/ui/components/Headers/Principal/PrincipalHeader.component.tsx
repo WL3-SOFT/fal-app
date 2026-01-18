@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@/ui/hooks";
 import { Avatar } from "../../Avatar";
-import { TextButton } from "../../Buttons";
+import { BackButton } from "../../Buttons";
 import { Logo } from "../../Logo";
 import { createHeaderStyles } from "./PrincipalHeader.styles";
 import type { HeaderProps } from "./PrincipalHeader.types";
@@ -35,10 +35,10 @@ export const PrincipalHeader = (props: HeaderProps) => {
 		<View style={styles.container}>
 			{shouldShowLogo && <Logo />}
 			{shouldShowBackButton && (
-				<TextButton
+				<BackButton
 					title={backButtonLabel}
 					onPress={backButtonCallback}
-					variant="text"
+					id="back-button"
 				/>
 			)}
 			<Avatar />

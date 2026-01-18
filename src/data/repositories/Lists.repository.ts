@@ -83,6 +83,27 @@ export class ListsRepository implements ListsRepositoryInterface {
 		return new List(result);
 	}
 
+	async findByNameAndUserId(
+		name: string,
+		userId: string,
+	): Promise<List | null> {
+		const result = await db.query.listsTable.findFirst({
+			where: and(
+				eq(listsTable.name, name),
+				eq(listsTable.createdBy, userId),
+				eq(listsTable.isActive, true),
+				isNull(listsTable.deletedAt),
+			),
+		});
+
+		if (!result) {
+			return null;
+		}
+
+		// Return a proper List entity instance
+		return new List(result);
+	}
+
 	async update(listId: string, data: UpdateListDto): Promise<void> {
 		await db
 			.update(listsTable)

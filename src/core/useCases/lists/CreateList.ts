@@ -1,7 +1,5 @@
 import {
-	MAXIMUM_LIST_DESCRIPTION_LENGTH,
 	MAXIMUM_LIST_NAME_LENGTH,
-	MINIMUM_LIST_DESCRIPTION_LENGTH,
 	MINIMUM_LIST_NAME_LENGTH,
 } from "#core/constraints";
 import type {
@@ -56,6 +54,17 @@ export class CreateListUseCase {
 
 		if (!data.createdBy || data.createdBy.trim().length === 0) {
 			throw new CreateListValidationError("Usuário criador é obrigatório");
+		}
+
+		const existingList = await this.listsRepository.findByNameAndUserId(
+			data.name.trim(),
+			data.createdBy,
+		);
+
+		if (existingList) {
+			throw new CreateListValidationError(
+				"Você já possui uma lista com este nome",
+			);
 		}
 
 		const listEntity = await this.listsRepository.create({

@@ -77,6 +77,18 @@ export interface ListsRepositoryInterface {
 	findById(listId: string): Promise<List | null>;
 
 	/**
+	 * Busca lista ativa por nome e usuário
+	 *
+	 * Usado para verificar se já existe uma lista com o mesmo nome para o usuário.
+	 * Retorna apenas listas ativas (não deletadas).
+	 *
+	 * @param name - Nome da lista (case-sensitive)
+	 * @param userId - ID do usuário proprietário
+	 * @returns Promise com a lista ou null se não encontrada
+	 */
+	findByNameAndUserId(name: string, userId: string): Promise<List | null>;
+
+	/**
 	 * Atualiza uma lista
 	 *
 	 * @param listId - ID da lista a atualizar

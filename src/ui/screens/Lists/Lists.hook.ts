@@ -3,7 +3,7 @@ import { useCallback, useMemo } from "react";
 import { DEFAULT_USER_ID } from "@/core/constraints";
 import { useListsStore } from "@/ui/stores/Lists.store";
 
-export const useListsViewModel = () => {
+export const useLists = () => {
 	const router = useRouter();
 
 	const lists = useListsStore((state) => state.lists);

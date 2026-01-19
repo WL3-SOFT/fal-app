@@ -3,14 +3,13 @@ import { Text, TextInput, View } from "react-native";
 
 import { CustomButton } from "@/ui/components";
 import { useTheme } from "@/ui/hooks";
+import { useCreateList } from "./CreateList.hook";
 import { createCreateListStyles } from "./CreateList.styles";
-import { useCreateListViewModel } from "./CreateList.viewModel";
 
 export const ListCreateView = () => {
 	const { theme } = useTheme();
 
-	const { control, isSubmitting, createList, canSubmit } =
-		useCreateListViewModel();
+	const { control, isSubmitting, createList, canSubmit } = useCreateList();
 
 	const styles = createCreateListStyles(theme);
 

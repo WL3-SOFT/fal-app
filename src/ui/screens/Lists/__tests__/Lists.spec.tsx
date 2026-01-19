@@ -1,6 +1,6 @@
 import { fireEvent, render, waitFor } from "#test-utils";
+import { useLists } from "../Lists.hook";
 import { ListsView } from "../Lists.view";
-import { useListsViewModel } from "../Lists.viewModel";
 import { createListsMock } from "./utils";
 
 const mockLoadLists = jest.fn();
@@ -10,7 +10,7 @@ const mockNavigateToCreate = jest.fn();
 const mockNavigateToDetails = jest.fn();
 const mockClearError = jest.fn();
 
-jest.mock("../Lists.viewModel");
+jest.mock("../Lists.hook");
 
 const MOCKED_LISTS_LENGTH = 3;
 
@@ -23,7 +23,7 @@ describe("List View - Component Test - Suite", () => {
 		beforeEach(() => {
 			const mockLists = createListsMock(MOCKED_LISTS_LENGTH);
 
-			(useListsViewModel as jest.Mock).mockReturnValue({
+			(useLists as jest.Mock).mockReturnValue({
 				lists: mockLists,
 				loading: false,
 				error: null,
@@ -74,7 +74,7 @@ describe("List View - Component Test - Suite", () => {
 
 	describe("Without Lists - Suite", () => {
 		beforeEach(() => {
-			(useListsViewModel as jest.Mock).mockReturnValue({
+			(useLists as jest.Mock).mockReturnValue({
 				lists: [],
 				loading: false,
 				error: null,
@@ -131,7 +131,7 @@ describe("List View - Component Test - Suite", () => {
 	describe("Actions - Suite", () => {
 		const mockLists = createListsMock(MOCKED_LISTS_LENGTH);
 		beforeEach(() => {
-			(useListsViewModel as jest.Mock).mockReturnValue({
+			(useLists as jest.Mock).mockReturnValue({
 				lists: mockLists,
 				loading: false,
 				error: null,

@@ -248,10 +248,10 @@ This project is in **early development stage**:
   - List operations: Create, GetById, GetUserLists, Update, Delete, IncrementUsage
   - Product operations: Add, Remove, UpdateQuantity, MarkAsPurchased, GetListProducts, GetPendingProducts
 - View Models (MVVM): 4 view models implemented
-  - useListsViewModel - Listagem e gerenciamento de listas
-  - useCreateListViewModel - Formulário de criação com validação
-  - useListDetailsViewModel - Detalhes e edição de lista
-  - useListProductsViewModel - Gerenciamento de produtos com filtros e progresso
+  - useLists - Listagem e gerenciamento de listas
+  - useCreateList - Formulário de criação com validação
+  - useListDetails - Detalhes e edição de lista
+  - useListProducts - Gerenciamento de produtos com filtros e progresso
 - Screen implementations - minimal (views precisam integração com view models)
 
 ## Additional Documentation

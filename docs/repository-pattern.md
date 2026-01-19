@@ -140,7 +140,7 @@ export class CreateListUseCase {
 import { ListsRepository } from "@/data/repositories";
 import { CreateListUseCase } from "@/core/useCases";
 
-export function useListsViewModel() {
+export function useLists() {
   // Dependency Injection manual
   const repository = new ListsRepository();
   const createListUseCase = new CreateListUseCase(repository);

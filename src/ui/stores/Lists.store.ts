@@ -22,13 +22,13 @@ import {
 } from "@/core/useCases/lists";
 import { ListsRepository } from "@/data/repositories";
 
-type LoadingState = "idle" | "loading" | "refreshing" | "success" | "error";
+type State = "idle" | "loading" | "refreshing" | "success" | "error";
 
 interface ListsState {
 	lists: ListWithProductCountDto[];
 	currentList: ListDto | null;
 	currentProducts: ListProductWithDetails[];
-	loadingState: LoadingState;
+	state: State;
 	error: string | null;
 
 	loadLists: (userId: string) => Promise<void>;
@@ -61,12 +61,12 @@ export const useListsStore = create<ListsState>()(
 		lists: [] as ListWithProductCountDto[],
 		currentList: null as ListDto | null,
 		currentProducts: [] as ListProductWithDetails[],
-		loadingState: "idle" as LoadingState,
+		state: "idle" as State,
 		error: null as string | null,
 
 		loadLists: async (userId: string) => {
 			set((state) => {
-				state.loadingState = "loading";
+				state.state = "loading";
 				state.error = null;
 			});
 
@@ -76,20 +76,20 @@ export const useListsStore = create<ListsState>()(
 
 				set((state) => {
 					state.lists = result;
-					state.loadingState = "success";
+					state.state = "success";
 				});
 			} catch (error) {
 				set((state) => {
 					state.error =
 						error instanceof Error ? error.message : "Erro ao carregar listas";
-					state.loadingState = "error";
+					state.state = "error";
 				});
 			}
 		},
 
 		loadList: async (listId: string) => {
 			set((state) => {
-				state.loadingState = "loading";
+				state.state = "loading";
 				state.error = null;
 			});
 
@@ -99,20 +99,20 @@ export const useListsStore = create<ListsState>()(
 
 				set((state) => {
 					state.currentList = result;
-					state.loadingState = "success";
+					state.state = "success";
 				});
 			} catch (error) {
 				set((state) => {
 					state.error =
 						error instanceof Error ? error.message : "Erro ao carregar lista";
-					state.loadingState = "error";
+					state.state = "error";
 				});
 			}
 		},
 
 		loadListProducts: async (listId: string) => {
 			set((state) => {
-				state.loadingState = "loading";
+				state.state = "loading";
 				state.error = null;
 			});
 
@@ -122,7 +122,7 @@ export const useListsStore = create<ListsState>()(
 
 				set((state) => {
 					state.currentProducts = result;
-					state.loadingState = "success";
+					state.state = "success";
 				});
 			} catch (error) {
 				set((state) => {
@@ -130,14 +130,14 @@ export const useListsStore = create<ListsState>()(
 						error instanceof Error
 							? error.message
 							: "Erro ao carregar produtos";
-					state.loadingState = "error";
+					state.state = "error";
 				});
 			}
 		},
 
 		createList: async (data: CreateListDto) => {
 			set((state) => {
-				state.loadingState = "loading";
+				state.state = "loading";
 				state.error = null;
 			});
 
@@ -146,7 +146,7 @@ export const useListsStore = create<ListsState>()(
 				const list = await useCase.execute(data);
 
 				set((state) => {
-					state.loadingState = "success";
+					state.state = "success";
 				});
 
 				return list;
@@ -154,7 +154,7 @@ export const useListsStore = create<ListsState>()(
 				set((state) => {
 					state.error =
 						error instanceof Error ? error.message : "Erro ao criar lista";
-					state.loadingState = "error";
+					state.state = "error";
 				});
 				throw error;
 			}
@@ -269,7 +269,7 @@ export const useListsStore = create<ListsState>()(
 
 		refresh: async (userId: string) => {
 			set((state) => {
-				state.loadingState = "refreshing";
+				state.state = "refreshing";
 				state.error = null;
 			});
 
@@ -279,13 +279,13 @@ export const useListsStore = create<ListsState>()(
 
 				set((state) => {
 					state.lists = result;
-					state.loadingState = "success";
+					state.state = "success";
 				});
 			} catch (error) {
 				set((state) => {
 					state.error =
 						error instanceof Error ? error.message : "Erro ao atualizar listas";
-					state.loadingState = "error";
+					state.state = "error";
 				});
 			}
 		},

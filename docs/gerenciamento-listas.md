@@ -373,7 +373,7 @@ O ViewModel é um **React Hook** que gerencia estado e lógica de negócio.
 ```typescript
 // src/ui/screens/Lists/Lists.viewModel.ts
 
-export function useListsViewModel(userId: string) {
+export function useLists(userId: string) {
   // Estado
   const [lists, setLists] = useState([]);
   const [state, setState] = useState<'idle' | 'loading' | 'error'>('idle');
@@ -494,7 +494,7 @@ User → Checkbox → ViewModel → Repository → Drizzle → SQLite
 export const ListsView = () => {
   const { userId } = useAuth();
   const { theme } = useTheme();
-  const { lists, state, error, refresh, deleteList } = useListsViewModel(userId);
+  const { lists, state, error, refresh, deleteList } = useLists(userId);
 
   const styles = useMemo(() => createStyles(theme), [theme]);
 
@@ -676,7 +676,7 @@ export const BadView = () => {
 
 // ✅ CORRETO - Lógica no ViewModel
 export const GoodView = () => {
-  const { lists } = useListsViewModel(userId);
+  const { lists } = useLists(userId);
   return <FlatList data={lists} />;
 };
 ```

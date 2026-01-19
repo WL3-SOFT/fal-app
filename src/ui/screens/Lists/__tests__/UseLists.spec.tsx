@@ -4,7 +4,7 @@ import { CreateListUseCase } from "@/core/useCases";
 import { DeleteListUseCase } from "@/core/useCases/lists/DeleteList";
 import { GetUserListsUseCase } from "@/core/useCases/lists/GetUserLists";
 import { useListsStore } from "@/ui/stores/Lists.store";
-import { useListsViewModel } from "../Lists.viewModel";
+import { useLists } from "../Lists.hook";
 import {
 	createListsMock,
 	listCount,
@@ -14,7 +14,7 @@ import {
 	useCaseErrorMessage,
 } from "./utils";
 
-describe("Lists View Model - Unit Test - Suite", () => {
+describe("Use Lists - Unit Test - Suite", () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 		useListsStore.setState({
@@ -27,17 +27,17 @@ describe("Lists View Model - Unit Test - Suite", () => {
 	});
 
 	it("should initialize with empty lists", () => {
-		const hook = renderHook(useListsViewModel);
+		const hook = renderHook(useLists);
 		expect(hook.result.current.lists).toEqual([]);
 	});
 
 	it("should have createList method defined", () => {
-		const hook = renderHook(useListsViewModel);
+		const hook = renderHook(useLists);
 		expect(hook.result.current.createList).toBeDefined();
 	});
 
 	it("should have deleteList method defined", () => {
-		const hook = renderHook(useListsViewModel);
+		const hook = renderHook(useLists);
 		expect(hook.result.current.deleteList).toBeDefined();
 	});
 
@@ -47,7 +47,7 @@ describe("Lists View Model - Unit Test - Suite", () => {
 				.spyOn(GetUserListsUseCase.prototype, "execute")
 				.mockResolvedValue(mockedListsData);
 
-			const hook = renderHook(useListsViewModel);
+			const hook = renderHook(useLists);
 
 			await waitFor(() => {
 				expect(hook.result.current.lists).toHaveLength(listCount);
@@ -59,7 +59,7 @@ describe("Lists View Model - Unit Test - Suite", () => {
 				.spyOn(GetUserListsUseCase.prototype, "execute")
 				.mockResolvedValue(mockedListsData);
 
-			const hook = renderHook(useListsViewModel);
+			const hook = renderHook(useLists);
 
 			await waitFor(() => {
 				expect(hook.result.current.loading).toBe(false);
@@ -71,7 +71,7 @@ describe("Lists View Model - Unit Test - Suite", () => {
 				.spyOn(GetUserListsUseCase.prototype, "execute")
 				.mockRejectedValue(new Error("Erro ao buscar listas"));
 
-			const hook = renderHook(useListsViewModel);
+			const hook = renderHook(useLists);
 
 			await waitFor(() => {
 				expect(hook.result.current.error).toBe("Erro ao buscar listas");
@@ -90,7 +90,7 @@ describe("Lists View Model - Unit Test - Suite", () => {
 		});
 
 		it("should return true when creating list is successful", async () => {
-			const hook = renderHook(useListsViewModel);
+			const hook = renderHook(useLists);
 
 			const result = await act(async () => {
 				return await hook.result.current.createList(mockedCreateListDto);
@@ -105,7 +105,7 @@ describe("Lists View Model - Unit Test - Suite", () => {
 				"execute",
 			);
 
-			const hook = renderHook(useListsViewModel);
+			const hook = renderHook(useLists);
 
 			await act(async () => {
 				await hook.result.current.createList(mockedCreateListDto);
@@ -119,7 +119,7 @@ describe("Lists View Model - Unit Test - Suite", () => {
 				.spyOn(CreateListUseCase.prototype, "execute")
 				.mockRejectedValue(new Error(useCaseErrorMessage));
 
-			const hook = renderHook(useListsViewModel);
+			const hook = renderHook(useLists);
 
 			const result = await act(async () => {
 				return await hook.result.current.createList(mockedCreateListDto);
@@ -142,7 +142,7 @@ describe("Lists View Model - Unit Test - Suite", () => {
 		});
 
 		it("should return true when deleting list is successful", async () => {
-			const hook = renderHook(useListsViewModel);
+			const hook = renderHook(useLists);
 
 			const result = await act(async () => {
 				return await hook.result.current.deleteList(mockListId);
@@ -157,7 +157,7 @@ describe("Lists View Model - Unit Test - Suite", () => {
 				"execute",
 			);
 
-			const hook = renderHook(useListsViewModel);
+			const hook = renderHook(useLists);
 
 			await act(async () => {
 				await hook.result.current.deleteList(mockListId);
@@ -171,7 +171,7 @@ describe("Lists View Model - Unit Test - Suite", () => {
 				.spyOn(DeleteListUseCase.prototype, "execute")
 				.mockRejectedValue(new Error("Erro ao deletar lista"));
 
-			const hook = renderHook(useListsViewModel);
+			const hook = renderHook(useLists);
 
 			const result = await act(async () => {
 				return await hook.result.current.deleteList(mockListId);
@@ -187,7 +187,7 @@ describe("Lists View Model - Unit Test - Suite", () => {
 				.spyOn(GetUserListsUseCase.prototype, "execute")
 				.mockResolvedValue(mockedListsData);
 
-			const hook = renderHook(useListsViewModel);
+			const hook = renderHook(useLists);
 
 			await waitFor(() => {
 				expect(hook.result.current.lists).toHaveLength(listCount);
@@ -210,7 +210,7 @@ describe("Lists View Model - Unit Test - Suite", () => {
 				navigate: jest.fn(),
 			});
 
-			const hook = renderHook(useListsViewModel);
+			const hook = renderHook(useLists);
 
 			act(() => {
 				hook.result.current.navigateToCreate();
@@ -228,7 +228,7 @@ describe("Lists View Model - Unit Test - Suite", () => {
 				push: jest.fn(),
 			});
 
-			const hook = renderHook(useListsViewModel);
+			const hook = renderHook(useLists);
 
 			act(() => {
 				hook.result.current.navigateToDetails(mockListId);
@@ -244,7 +244,7 @@ describe("Lists View Model - Unit Test - Suite", () => {
 				.spyOn(GetUserListsUseCase.prototype, "execute")
 				.mockResolvedValue(mockedListsData);
 
-			const hook = renderHook(useListsViewModel);
+			const hook = renderHook(useLists);
 
 			await waitFor(() => {
 				expect(hook.result.current.hasContent).toBe(true);
@@ -256,7 +256,7 @@ describe("Lists View Model - Unit Test - Suite", () => {
 				.spyOn(GetUserListsUseCase.prototype, "execute")
 				.mockResolvedValue([]);
 
-			const hook = renderHook(useListsViewModel);
+			const hook = renderHook(useLists);
 
 			await waitFor(() => {
 				expect(hook.result.current.hasContent).toBe(false);
@@ -270,7 +270,7 @@ describe("Lists View Model - Unit Test - Suite", () => {
 				.spyOn(GetUserListsUseCase.prototype, "execute")
 				.mockResolvedValue([]);
 
-			const hook = renderHook(useListsViewModel);
+			const hook = renderHook(useLists);
 
 			await waitFor(() => {
 				expect(hook.result.current.quantityText).toBe("Sem listas no momento");
@@ -284,7 +284,7 @@ describe("Lists View Model - Unit Test - Suite", () => {
 				.spyOn(GetUserListsUseCase.prototype, "execute")
 				.mockResolvedValue(singleListMock);
 
-			const hook = renderHook(useListsViewModel);
+			const hook = renderHook(useLists);
 
 			await waitFor(() => {
 				expect(hook.result.current.quantityText).toBe("1 lista");
@@ -296,7 +296,7 @@ describe("Lists View Model - Unit Test - Suite", () => {
 				.spyOn(GetUserListsUseCase.prototype, "execute")
 				.mockResolvedValue(mockedListsData);
 
-			const hook = renderHook(useListsViewModel);
+			const hook = renderHook(useLists);
 
 			await waitFor(() => {
 				expect(hook.result.current.quantityText).toBe(`${listCount} listas`);

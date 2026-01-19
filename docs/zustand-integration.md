@@ -178,7 +178,7 @@ export const useActiveLists = () =>
 ```typescript
 // src/ui/screens/Lists/Lists.viewModel.ts
 
-export function useListsViewModel(userId: string) {
+export function useLists(userId: string) {
   // Selectors (só re-renderiza se mudar)
   const lists = useActiveLists();
   const loadingState = useListsLoading();
@@ -213,7 +213,7 @@ export function useListsViewModel(userId: string) {
 
 export const ListsView = () => {
   const { userId } = useAuth();
-  const viewModel = useListsViewModel(userId);
+  const viewModel = useLists(userId);
 
   if (viewModel.isLoading) {
     return <Loading />;

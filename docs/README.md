@@ -103,7 +103,7 @@ export const useListsStore = create<ListsStore>()(
 
 ```typescript
 // src/ui/screens/Lists/Lists.viewModel.ts
-export const useListsViewModel = (userId: string) => {
+export const useLists = (userId: string) => {
   const lists = useLists();
   const { loadLists } = useListsActions();
 
@@ -121,7 +121,7 @@ export const useListsViewModel = (userId: string) => {
 // src/ui/screens/Lists/Lists.view.tsx
 export const ListsView = () => {
   const { userId } = useAuth();
-  const { lists } = useListsViewModel(userId);
+  const { lists } = useLists(userId);
 
   return (
     <FlatList data={lists} />

@@ -10,7 +10,7 @@ import { useToast } from "@/ui/hooks";
 import { useListsStore } from "@/ui/stores/Lists.store";
 import { type CreateListFormData, createListSchema } from "./CreateList.types";
 
-export const useCreateListViewModel = () => {
+export const useCreateList = () => {
 	const router = useRouter();
 	const { promise } = useToast();
 	const {

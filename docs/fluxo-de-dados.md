@@ -57,7 +57,7 @@
 
 ```typescript
 export const ListsView = () => {
-  const { lists, navigateToDetails } = useListsViewModel();
+  const { lists, navigateToDetails } = useLists();
 
   return (
     <FlatList
@@ -81,7 +81,7 @@ export const ListsView = () => {
 #### 2️⃣ ViewModel (src/ui/screens/Lists/Lists.viewModel.ts)
 
 ```typescript
-export const useListsViewModel = () => {
+export const useLists = () => {
   const [state, setState] = useState<{
     lists: ListWithProductCountDto[];  // ← DTO
     // ...

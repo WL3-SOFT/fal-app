@@ -2,9 +2,9 @@ import { FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ListCard } from "@/ui/components";
 import { useTheme } from "@/ui/hooks";
-import { Header, NoList } from "./components";
+import { Header, NoList } from "./subcomponents";
+import { useLists } from "./Lists.hook";
 import { createMyListsStyles } from "./Lists.styles";
-import { useListsViewModel } from "./Lists.viewModel";
 
 export const ListsView = () => {
 	const { theme } = useTheme();
@@ -15,7 +15,7 @@ export const ListsView = () => {
 		navigateToDetails,
 		quantityText,
 		navigateToCreate,
-	} = useListsViewModel();
+	} = useLists();
 	const styles = createMyListsStyles(theme, hasContent);
 
 	return (

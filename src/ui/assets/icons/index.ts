@@ -8,3 +8,4 @@ export * from "./listingItems";
 export * from "./moon";
 export * from "./plusBox";
 export * from "./sun";
+export * from "./verticalDots";

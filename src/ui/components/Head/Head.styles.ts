@@ -32,5 +32,10 @@ export const createHeadStyles = (theme: Theme, color?: string) => {
 			fontWeight: theme.typography.fontWeight.regular,
 			color: color || theme.colors.text,
 		},
+		h6: {
+			fontSize: theme.typography.fontSize.sm3,
+			fontWeight: theme.typography.fontWeight.regular,
+			color: color || theme.colors.text,
+		},
 	});
 };

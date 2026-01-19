@@ -1,26 +1,22 @@
 import { useLocalSearchParams } from "expo-router";
-import { useEffect } from "react";
-import { Text, View } from "react-native";
-import { useListsStore } from "@/ui/stores/Lists.store";
+import { View } from "react-native";
+import { useTheme } from "@/ui/hooks";
+import { useListDetails } from "./ListDetail.hook";
+import { createListDetailStyles } from "./ListDetail.styles";
+import { Header } from "./subcomponents";
 
 export const ListDetailView = () => {
+	const { theme } = useTheme();
 	const { id } = useLocalSearchParams();
-	const { loadList, currentList } = useListsStore((state) => state);
-
-	useEffect(() => {
-		loadList(id as string);
-	}, [id, loadList]);
+	const { list, headerSubTitle } = useListDetails(id as string);
+	const styles = createListDetailStyles(theme);
 
 	return (
-		<View>
-			<Text>Lista {currentList?.name}</Text>
-			{currentList && (
-				<Text>
-					Criado em {currentList.createdAt.toDateString()} às{" "}
-					{currentList.createdAt.toTimeString()}
-				</Text>
-			)}
-			{currentList && <Text>Criado por {currentList.createdBy}</Text>}
+		<View style={styles.container}>
+			<Header
+				listName={list?.name || ""}
+				headerSubTitle={headerSubTitle}
+			/>
 		</View>
 	);
 };

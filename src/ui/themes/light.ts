@@ -52,8 +52,8 @@ export const lightTheme: Theme = {
 		},
 
 		fallback: {
-			text: colors.neutral["9"],
-			icon: colors.neutral["9"],
+			text: colors.neutral["7"],
+			icon: colors.neutral["7"],
 		},
 		title: colors.neutral["10"],
 		subtitle: colors.neutral["7"],

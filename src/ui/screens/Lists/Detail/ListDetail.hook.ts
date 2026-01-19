@@ -81,7 +81,7 @@ export const useListDetails = (listId: string) => {
 		clearErrorAction();
 	}, [clearErrorAction]);
 
-	const loading = loadingState === "loading";
+	const loading = useMemo(() => loadingState === "loading", [loadingState]);
 
 	const headerSubTitle = useMemo(() => {
 		if (!list) return "";
@@ -223,6 +223,7 @@ export const useListProducts = (listId: string) => {
 	const loading = loadingState === "loading";
 
 	const totalProducts = allProducts.length;
+	const hasProducts = totalProducts > 0;
 	const purchasedProducts = allProducts.filter((p) => p.isPurchased).length;
 	const pendingProducts = totalProducts - purchasedProducts;
 	const progressPercentage =
@@ -249,5 +250,6 @@ export const useListProducts = (listId: string) => {
 		markAsPurchased,
 		setFilter,
 		clearError,
+		hasProducts,
 	};
 };

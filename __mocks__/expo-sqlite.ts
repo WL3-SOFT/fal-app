@@ -10,7 +10,6 @@ export const openDatabaseSync = jest.fn(() => ({
 	closeSync: jest.fn(),
 }));
 
-// Mock para expo-sqlite/kv-store
 export default {
 	getItem: jest.fn(() => Promise.resolve(null)),
 	setItem: jest.fn(() => Promise.resolve()),

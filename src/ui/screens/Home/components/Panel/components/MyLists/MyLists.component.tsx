@@ -5,10 +5,10 @@ import { useTheme } from "@/ui/hooks";
 
 export const MyLists = () => {
 	const { theme } = useTheme();
-	const { push } = useRouter();
+	const router = useRouter();
 
 	const goToMyLists = () => {
-		push("/lists");
+		router.navigate("/lists");
 	};
 
 	return (

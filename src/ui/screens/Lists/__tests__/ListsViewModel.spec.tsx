@@ -206,8 +206,8 @@ describe("Lists View Model - Unit Test - Suite", () => {
 	describe("Navigate To Create - Method Test Suite", () => {
 		it("should navigate to create list when navigateToCreate is called", () => {
 			const mockRouter = require("expo-router");
-			const pushSpy = jest.spyOn(mockRouter, "useRouter").mockReturnValue({
-				push: jest.fn(),
+			const navigateSpy = jest.spyOn(mockRouter, "useRouter").mockReturnValue({
+				navigate: jest.fn(),
 			});
 
 			const hook = renderHook(useListsViewModel);
@@ -216,7 +216,7 @@ describe("Lists View Model - Unit Test - Suite", () => {
 				hook.result.current.navigateToCreate();
 			});
 
-			expect(pushSpy).toHaveBeenCalled();
+			expect(navigateSpy).toHaveBeenCalled();
 		});
 	});
 

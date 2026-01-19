@@ -11,7 +11,7 @@ import { useListsStore } from "@/ui/stores/Lists.store";
 import { type CreateListFormData, createListSchema } from "./CreateList.types";
 
 export const useCreateListViewModel = () => {
-	const { push } = useRouter();
+	const router = useRouter();
 	const { promise } = useToast();
 	const {
 		control,
@@ -62,7 +62,7 @@ export const useCreateListViewModel = () => {
 
 		const { id } = result.data;
 
-		push(`/lists/${id}`);
+		router.replace(`/lists/${id}`);
 	};
 
 	const onError: SubmitErrorHandler<CreateListFormData> = (errors) => {

@@ -7,7 +7,7 @@ export const createMyListsStyles = (theme: Theme, hasContent: boolean) =>
 			flexDirection: "column",
 			backgroundColor: theme.colors.background,
 			paddingTop: theme.spacing.sm6,
-			gap: theme.spacing.sm1,
+			gap: theme.spacing.xs2,
 			paddingHorizontal: theme.spacing.sm3,
 			...(!hasContent && { height: "100%" }),
 		},

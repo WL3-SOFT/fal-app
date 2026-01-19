@@ -27,7 +27,7 @@ export const useListsViewModel = () => {
 	);
 
 	const navigateToCreate = useCallback(() => {
-		router.push("/lists/create");
+		router.navigate("/lists/create");
 	}, [router]);
 
 	const navigateToDetails = useCallback(
